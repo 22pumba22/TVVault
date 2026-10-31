@@ -250,7 +250,11 @@ public class MainActivity extends LockedActivity {
 
         TextView titleView = text(title, 20);
         titleView.setTypeface(Typeface.DEFAULT, Typeface.BOLD);
+        titleView.setMaxLines(2);
+        titleView.setEllipsize(android.text.TextUtils.TruncateAt.END);
         TextView subtitleView = text(subtitle, 14);
+        subtitleView.setMaxLines(2);
+        subtitleView.setEllipsize(android.text.TextUtils.TruncateAt.END);
         subtitleView.setTextColor(MUTED);
         subtitleView.setPadding(0, dp(2), 0, 0);
         copy.addView(titleView);
@@ -271,125 +275,48 @@ public class MainActivity extends LockedActivity {
     private void showHome() {
         currentScreen = Screen.HOME;
         LinearLayout root = baseRoot();
-
+        root.setPadding(dp(24),dp(16),dp(24),dp(16));
         LinearLayout header = new LinearLayout(this);
-        header.setOrientation(LinearLayout.HORIZONTAL);
         header.setGravity(Gravity.CENTER_VERTICAL);
-        header.setPadding(0, 0, 0, dp(14));
-
-        ImageView logo = new ImageView(this);
-        logo.setImageResource(R.drawable.tv_vault_icon);
+        ImageView logo = new ImageView(this); logo.setImageResource(R.drawable.tv_vault_icon);
         logo.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        logo.setFocusable(false);
-        header.addView(logo, new LinearLayout.LayoutParams(dp(62), dp(62)));
-
-        LinearLayout headerCopy = new LinearLayout(this);
-        headerCopy.setOrientation(LinearLayout.VERTICAL);
-        headerCopy.setPadding(dp(18), 0, 0, 0);
-
-        TextView title = text("TV VAULT", 28);
-        title.setTypeface(Typeface.DEFAULT, Typeface.BOLD);
-        TextView tagline = text(getString(R.string.tagline), 16);
-        tagline.setTextColor(MUTED);
-        tagline.setPadding(0, dp(3), 0, 0);
-        headerCopy.addView(title);
-        headerCopy.addView(tagline);
-        header.addView(headerCopy);
-        root.addView(header);
-
-        ArrayList<View> focusables = new ArrayList<>();
-
-        LinearLayout selectApp = homeCard(
-                "KEY",
-                Color.rgb(20, 106, 224),
-                getString(R.string.select_app),
-                getString(R.string.select_app_hint),
-                () -> {
-                    editorIndex = -1;
-                    editorLabel = "";
-                    editorPackage = "";
-                    editorUsername = "";
-                    editorPassword = "";
-                    showAppPicker();
-                }
-        );
-        root.addView(selectApp, marginBottom(dp(8)));
-        focusables.add(selectApp);
-
-        LinearLayout exclusions = homeCard(
-                "OFF",
-                Color.rgb(109, 55, 177),
-                getString(R.string.excluded_apps),
-                getString(R.string.excluded_apps_hint),
-                this::showExclusions
-        );
-        root.addView(exclusions, marginBottom(dp(8)));
-        focusables.add(exclusions);
-
-        LinearLayout vault = homeCard(
-                "LOCK",
-                Color.rgb(43, 142, 67),
-                getString(R.string.vault),
-                getString(R.string.vault_hint),
-                this::showVault
-        );
-        root.addView(vault, marginBottom(dp(8)));
-        focusables.add(vault);
-
-        LinearLayout autofillSetup = autofillServiceCard();
-        root.addView(autofillSetup, marginBottom(dp(8)));
-        focusables.add(autofillSetup);
-
-        LinearLayout security = homeCard("PIN", Color.rgb(75, 94, 116),
-                getString(R.string.security_settings), getString(R.string.security_subtitle),
-                () -> startActivity(new Intent(this, PinSettingsActivity.class)));
-        root.addView(security, marginBottom(dp(8)));
-        focusables.add(security);
-
-        View spacer = new View(this);
-        root.addView(spacer, new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                0,
-                1f
-        ));
-
-        View divider = new View(this);
-        divider.setBackgroundColor(Color.rgb(39, 52, 67));
-        root.addView(divider, new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                dp(1)
-        ));
-
-        LinearLayout footer = new LinearLayout(this);
-        footer.setOrientation(LinearLayout.HORIZONTAL);
-        footer.setGravity(Gravity.CENTER_VERTICAL);
-        footer.setPadding(0, dp(12), 0, 0);
-
-        TextView credit = text(
-                getString(R.string.credit),
-                13
-        );
-        credit.setTextColor(MUTED);
-        footer.addView(credit, new LinearLayout.LayoutParams(
-                0,
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                1f
-        ));
-
-        Button exit = tvButton(getString(R.string.exit));
-        exit.setTypeface(Typeface.DEFAULT, Typeface.BOLD);
+        header.addView(logo,new LinearLayout.LayoutParams(dp(46),dp(46)));
+        LinearLayout heading = new LinearLayout(this); heading.setOrientation(LinearLayout.VERTICAL);
+        heading.setPadding(dp(14),0,0,0);
+        TextView title = text("TV VAULT",26); title.setTypeface(Typeface.DEFAULT,Typeface.BOLD);
+        heading.addView(title); heading.addView(text(getString(R.string.tagline),14));
+        header.addView(heading,new LinearLayout.LayoutParams(0,-2,1f));
+        Button exit = tvButton(getString(R.string.exit)); exit.setMinHeight(dp(44));
         exit.setOnClickListener(v -> finish());
-        footer.addView(exit, new LinearLayout.LayoutParams(dp(150), dp(52)));
-        focusables.add(exit);
+        header.addView(exit,new LinearLayout.LayoutParams(dp(118),dp(46)));
+        root.addView(header,marginBottom(dp(12)));
 
-        root.addView(footer);
-        linkFocusChain(focusables);
-
-        ScrollView homeScroll = new ScrollView(this);
-        homeScroll.setFillViewport(true);
-        homeScroll.addView(root);
-        setContentView(homeScroll);
-        selectApp.requestFocus();
+        LinearLayout select = homeCard("KEY",Color.rgb(20,106,224),getString(R.string.select_app),
+                getString(R.string.select_app_hint),()-> {
+                    editorIndex=-1; editorLabel=editorPackage=editorUsername=editorPassword=""; showAppPicker();
+                });
+        LinearLayout vault = homeCard("LOCK",Color.rgb(43,142,67),getString(R.string.vault),getString(R.string.vault_hint),this::showVault);
+        LinearLayout excluded = homeCard("OFF",Color.rgb(109,55,177),getString(R.string.excluded_apps),getString(R.string.excluded_apps_hint),this::showExclusions);
+        LinearLayout security = homeCard("PIN",Color.rgb(75,94,116),getString(R.string.security_settings),getString(R.string.security_subtitle),
+                ()->startActivity(new Intent(this,PinSettingsActivity.class)));
+        LinearLayout top = new LinearLayout(this), bottom = new LinearLayout(this);
+        for(LinearLayout line : new LinearLayout[]{top,bottom}) line.setBaselineAligned(false);
+        LinearLayout.LayoutParams left = new LinearLayout.LayoutParams(0,-1,1f); left.rightMargin=dp(10);
+        top.addView(select,left); top.addView(vault,new LinearLayout.LayoutParams(0,-1,1f));
+        LinearLayout.LayoutParams leftBottom = new LinearLayout.LayoutParams(0,-1,1f); leftBottom.rightMargin=dp(10);
+        bottom.addView(excluded,leftBottom); bottom.addView(security,new LinearLayout.LayoutParams(0,-1,1f));
+        LinearLayout.LayoutParams topParams = new LinearLayout.LayoutParams(-1,0,1f); topParams.bottomMargin=dp(10);
+        root.addView(top,topParams);
+        LinearLayout.LayoutParams bottomParams = new LinearLayout.LayoutParams(-1,0,1f); bottomParams.bottomMargin=dp(10);
+        root.addView(bottom,bottomParams);
+        LinearLayout autofill = autofillServiceCard(); root.addView(autofill,new LinearLayout.LayoutParams(-1,dp(76)));
+        for(View view : new View[]{exit,select,vault,excluded,security,autofill}) assignId(view);
+        select.setNextFocusRightId(vault.getId()); vault.setNextFocusLeftId(select.getId());
+        excluded.setNextFocusRightId(security.getId()); security.setNextFocusLeftId(excluded.getId());
+        linkVertical(select,excluded); linkVertical(vault,security);
+        select.setNextFocusUpId(exit.getId()); vault.setNextFocusUpId(exit.getId()); exit.setNextFocusDownId(vault.getId());
+        excluded.setNextFocusDownId(autofill.getId()); security.setNextFocusDownId(autofill.getId()); autofill.setNextFocusUpId(security.getId());
+        setContentView(root); select.requestFocus();
     }
 
     private boolean isTvVaultAutofillEnabled() {
@@ -421,10 +348,14 @@ public class MainActivity extends LockedActivity {
 
         TextView titleView = text(getString(R.string.setup_autofill), 20);
         titleView.setTypeface(Typeface.DEFAULT, Typeface.BOLD);
+        titleView.setMaxLines(2);
+        titleView.setEllipsize(android.text.TextUtils.TruncateAt.END);
         TextView subtitleView = text(
                 getString(R.string.setup_autofill_hint),
                 14
         );
+        subtitleView.setMaxLines(2);
+        subtitleView.setEllipsize(android.text.TextUtils.TruncateAt.END);
         subtitleView.setTextColor(MUTED);
         subtitleView.setPadding(0, dp(2), 0, 0);
         copy.addView(titleView);
@@ -605,7 +536,8 @@ public class MainActivity extends LockedActivity {
     }
 
     private EditText field(String hint, String value, int inputType) {
-        EditText e = new EditText(this);
+        boolean secret = (inputType & InputType.TYPE_MASK_VARIATION) == InputType.TYPE_TEXT_VARIATION_PASSWORD;
+        EditText e = secret ? new SecretInput(this,false) : new EditText(this);
         e.setHint(hint);
         e.setText(value);
         e.setTextColor(Color.WHITE);
@@ -613,7 +545,8 @@ public class MainActivity extends LockedActivity {
         e.setTextSize(18);
         e.setSingleLine(true);
         e.setSaveEnabled(false);
-        e.setInputType(inputType);
+        if (!secret) e.setInputType(inputType);
+        if (secret) ((SecretInput)e).hideAll();
         e.setFocusable(true);
         e.setFocusableInTouchMode(true);
         e.setPadding(dp(14), dp(8), dp(14), dp(8));

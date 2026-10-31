@@ -13,3 +13,5 @@ The PIN controls access; it does not derive the vault encryption key. Without a 
 Autofill availability depends on Android and the target app. Credentials are entered manually; automatic capture, import, export and recovery are not provided. Clearing app data, uninstalling, or losing the device key can permanently lose the vault. A forgotten PIN cannot be recovered.
 
 Designed for Android TV. Compatible text fields and an enabled Android Autofill service are required. Minimum Android version: 9.
+
+The first-open security notice can be acknowledged and hidden for future launches. An active PIN must be re-entered before changing or disabling it.

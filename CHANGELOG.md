@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.17.1 (versionCode 19) — 2026-10-31
+- Single-page two-column Home and top-right Exit; author credit moved to disclosure.
+- Transparent icon corners; full-bleed 16:9 TV banner with TV Vault lettering.
+- Fast Android-Keystore HMAC PIN verifier with one-time legacy-PIN migration.
+- Hide new/confirm fields while PIN is active; require current PIN to change/disable.
+- Short PIN recommendation; full-height settings background.
+- First-open security disclosure, Accept/Decline and Do not show again.
+- Secret inputs briefly reveal the latest typed character and then show asterisks.
+
 ## 0.17.0 (versionCode 18) — 2026-10-31
 - Optional 4–12 digit PIN for the app and Autofill; disabled by default.
 - Re-lock after backgrounding; persistent retry delays; PIN help/settings.

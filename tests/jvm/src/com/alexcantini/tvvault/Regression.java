@@ -32,7 +32,7 @@ public class Regression {
  }
  static BwField field(String id,int type,String...hints){ViewNode n=new ViewNode();n.id=id;n.inputType=type;n.hints=hints;return new BwField(n);}
  public static void main(String[] args)throws Exception {
-  Context context=new Context();PinStore pin=new PinStore(context);
+  Context context=new Context();PinStore pin=new PinStore(context, create -> new SecretKeySpec(new byte[32], "HmacSHA256"));
   check(!pin.isEnabled(),"PIN disabled on first use");
   rejects(()->pin.set("12"),"PIN rejects too-short values");rejects(()->pin.set("abcd"),"PIN accepts ASCII digits only");
   pin.set("012345");check(pin.isEnabled(),"PIN enabled");
@@ -43,12 +43,20 @@ public class Regression {
   pin.set("012345");check(!salt.equals(p.getString("salt","")),"Same PIN generates a new random salt");
   for(int i=0;i<5;i++)check(!pin.verify("111111"),"Wrong attempt "+(i+1));
   check(pin.remainingSeconds()>0,"Cooldown starts after five failures");
-  PinStore reopened=new PinStore(context);check(!reopened.verify("012345"),"Restart cannot bypass cooldown");
+  PinStore reopened=new PinStore(context, create -> new SecretKeySpec(new byte[32], "HmacSHA256"));check(!reopened.verify("012345"),"Restart cannot bypass cooldown");
   p.edit().putLong("until",0).commit();check(reopened.verify("012345"),"Correct PIN accepted after cooldown");
   check(p.getInt("failures",-1)==0,"Successful unlock resets failure counter");
   reopened.disable();check(!reopened.isEnabled(),"PIN can be disabled");
   pin.set("1234");p.edit().putString("hash","bad").commit();check(pin.isEnabled(),"Corrupt PIN config stays enabled");rejects(()->pin.verify("1234"),"Corrupt PIN fails closed");
   pin.disable();p.failWrites=true;rejects(()->pin.set("1234"),"PIN write failure is surfaced");p.failWrites=false;
+  Context migrationContext=new Context();LegacyPinStore legacyPin=new LegacyPinStore(migrationContext);legacyPin.set("9876");
+  PinStore migrated=new PinStore(migrationContext,create->new SecretKeySpec(new byte[32],"HmacSHA256"));
+  check(migrated.isLegacy(),"Legacy PIN format recognized");check(!migrated.verify("0000"),"Wrong legacy PIN rejected");
+  check(migrated.isLegacy(),"Wrong guess cannot migrate legacy verifier");
+  check(migrated.verify("9876"),"Existing PIN unlocks and migrates");check(!migrated.isLegacy(),"Successful legacy unlock upgrades format");
+  check(migrated.verify("9876"),"Migrated PIN verifies using keyed HMAC");
+  PinStore missingPinKey=new PinStore(migrationContext,create->{throw new IllegalStateException("missing key");});
+  rejects(()->missingPinKey.verify("9876"),"Missing PIN keystore key fails closed");check(missingPinKey.isEnabled(),"Missing key never disables PIN");
   Security.insertProviderAt(new FakeProvider(),1);
   Context vaultContext=new Context();LegacyCryptoStore legacy=new LegacyCryptoStore(vaultContext);
   List<Credential> old=List.of(new Credential("TV test","example.tv","local-user","secret-password"));legacy.save(old);

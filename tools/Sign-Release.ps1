@@ -4,14 +4,15 @@ param(
     [string]$ExpectedCertificateSha256
 )
 $ErrorActionPreference = 'Stop'
-$env:JAVA_HOME = if ($env:JAVA_HOME) { $env:JAVA_HOME } else { 'C:\Program Files\Android\Android Studio\jbr' }
+if (-not $env:JAVA_HOME -or -not (Test-Path -LiteralPath (Join-Path $env:JAVA_HOME 'bin/keytool.exe'))) { $env:JAVA_HOME = 'C:\Program Files\Android\Android Studio\jbr' }
+if (-not (Test-Path -LiteralPath (Join-Path $env:JAVA_HOME 'bin/keytool.exe'))) { throw 'Imposta JAVA_HOME su un JDK con keytool disponibile.' }
 $sdkPath = if ($env:ANDROID_HOME) { $env:ANDROID_HOME } else { Join-Path $env:LOCALAPPDATA 'Android\Sdk' }
 $signer = Get-ChildItem -LiteralPath (Join-Path $sdkPath 'build-tools') -Filter apksigner.bat -Recurse |
     Sort-Object FullName -Descending | Select-Object -First 1
 if (-not $signer) { throw 'apksigner non trovato nel SDK Android.' }
 $keytool = Join-Path $env:JAVA_HOME 'bin/keytool.exe'
-$unsigned = Join-Path $PSScriptRoot 'TVVault_v0.17.0_release-unsigned.apk'
-$outputApk = Join-Path $PSScriptRoot 'TVVault_v0.17.0_release.apk'
+$unsigned = Join-Path $PSScriptRoot 'TVVault_v0.17.1_release-unsigned.apk'
+$outputApk = Join-Path $PSScriptRoot 'TVVault_v0.17.1_release.apk'
 $pendingApk = Join-Path $PSScriptRoot '.TVVault-signing-pending.apk'
 if (-not (Test-Path -LiteralPath $unsigned)) { throw 'Lo script deve essere accanto all APK release-unsigned.' }
 if (-not $KeystorePath) { $KeystorePath = Read-Host 'Percorso completo in cui conservare la chiave definitiva .jks (fuori dal repository)' }

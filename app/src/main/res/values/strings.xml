@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <resources>
     <string name="app_name">TV Vault</string>
     <string name="tagline">Secure · Simple · Yours</string>
@@ -8,7 +8,7 @@
     <string name="excluded_apps_hint">Manage apps that will never show the TV Vault popup</string>
     <string name="vault">Vault</string>
     <string name="vault_hint">View and manage your saved credentials</string>
-    <string name="credit">TV Vault is a secure password manager created by Alex Cantini.</string>
+    <string name="credit">TV Vault is a password manager developed by Alex Cantini.</string>
     <string name="exit">Exit</string>
     <string name="setup_autofill">Set TV Vault as Autofill service</string>
     <string name="setup_autofill_hint">Enable or disable password autofill</string>
@@ -48,8 +48,8 @@
     <string name="fill_with_vault">Fill with TV Vault</string>
     <string name="open_local_vault">Open the local vault</string>
     <string name="autofill_error">TV Vault could not prepare autofill.</string>
-    <string name="security_settings">Security and optional PIN</string>
-    <string name="security_subtitle">Manage access protection and read security information</string>
+    <string name="security_settings">Security and PIN</string>
+    <string name="security_subtitle">Manage access protection</string>
     <string name="locked">TV Vault locked</string>
     <string name="unlock_title">Unlock TV Vault</string>
     <string name="pin_hint">Numeric PIN (4–12 digits)</string>
@@ -62,8 +62,8 @@
     <string name="pin_error">PIN protection could not be read or saved. Access remains protected.</string>
     <string name="pin_wrong">Incorrect PIN.</string>
     <string name="pin_on">PIN enabled</string>
-    <string name="pin_off">PIN disabled (optional)</string>
-    <string name="pin_description">The optional PIN locks the app and autofill. When enabled, it is requested again after the app goes into the background. It is an access lock; the archive retains its existing Android Keystore encryption. Choose a PIN you can remember: it cannot be recovered.</string>
+    <string name="pin_off">PIN disabled</string>
+    <string name="pin_description">We recommend setting a PIN to protect access to your passwords. Choose one you can remember: it cannot be recovered.</string>
     <string name="new_pin">New PIN (4–12 digits)</string>
     <string name="confirm_pin">Confirm new PIN</string>
     <string name="change_pin">Change PIN</string>
@@ -71,7 +71,6 @@
     <string name="disable_pin">Disable PIN</string>
     <string name="pin_mismatch">The PINs do not match.</string>
     <string name="saving">Saving…</string>
-    <string name="disable_pin_confirm">Allow access to TV Vault and autofill without a PIN? Saved credentials remain encrypted.</string>
     <string name="security_info">Security information</string>
     <string name="security_details">Credentials are stored only on this device, encrypted using AES-256-GCM with a key in Android Keystore. TV Vault has no Internet permission or cloud sync. The optional PIN controls access to the app and autofill; it does not derive the encryption key. Without a PIN, anyone who can use the app can access the vault. A rooted or compromised device may expose credentials. Autofill requires compatible apps and Android support. There is no export or recovery feature: clearing app data, uninstalling, or losing the key may permanently lose the vault. TV Vault has not undergone an independent security audit.</string>
     <string name="vault_error_title">Vault unavailable</string>
@@ -81,4 +80,15 @@
     <string name="other_app_title">Credential for another app</string>
     <string name="other_app_warning">“%1$s” is associated with %2$s. Send its credentials to %3$s? Continue only if you trust this app.</string>
     <string name="fill_anyway">Fill this app</string>
+    <string name="current_pin_prompt">Enter your current PIN to continue.</string>
+    <string name="current_pin">Current PIN</string>
+    <string name="continue_action">Continue</string>
+    <string name="save_pin">Save new PIN</string>
+    <string name="upgrading_pin">Updating PIN protection. This first check may take a few seconds…</string>
+    <string name="disclaimer_title">Security information</string>
+    <string name="dont_show_again">Do not show again</string>
+    <string name="accept">Accept</string>
+    <string name="refuse">Decline</string>
+    <string name="disclaimer_save_error">Could not save your choice. Please try again.</string>
+    <string name="security_with_credit">%1$s\n\n%2$s</string>
 </resources>

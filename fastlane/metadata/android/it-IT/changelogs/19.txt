@@ -1,0 +1,1 @@
+Home in una pagina, icona e banner corretti, verifica PIN più veloce, conferma PIN attuale, avviso iniziale e password mascherate con asterischi.

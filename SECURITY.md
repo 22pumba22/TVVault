@@ -4,8 +4,16 @@ TV Vault is an offline local credential manager, not an audited security product
 
 ## Protected boundaries
 - At-rest credentials: AES-256-GCM, per-install Android Keystore key.
-- Optional UI gate: PIN verifier, fresh random 32-byte salt, PBKDF2-HMAC-SHA256
-  210,000 iterations / 256 bits, MessageDigest.isEqual comparison.
+- Optional UI gate: PIN verifier, fresh random 32-byte salt, HMAC-SHA256 using
+  a separate Android Keystore key (TVVaultPinKeyV2), constant-time comparison.
+  Legacy PBKDF2-HMAC-SHA256 / 210,000 iterations remains solely for existing PIN
+  verification and one-time migration on successful unlock. Unknown verifier
+  formats or missing PIN keys fail closed; no key replacement on verification.
+- Changing/disabling an enabled PIN requires a fresh current-PIN check.
+  New-PIN entry is revealed only after successful verification; backgrounding
+  invalidates the in-progress settings authorization.
+- Secret inputs reveal only a newly typed single character for 650 ms, then show
+  asterisks; stored values and multi-character pasted text remain masked.
 - PIN verifier/cooldown: private app preferences, not a cloud service.
 - PIN failures: persisted delays from the fifth failure; max 300 seconds.
 - Background: discard protected activity UI and require unlock on re-entry.

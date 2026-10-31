@@ -21,6 +21,9 @@ public abstract class LockedActivity extends Activity {
     private int generation;
     private boolean pinAtUnlock;
     private boolean foreground;
+    private boolean disclosurePending;
+    private static int foregroundActivities;
+    private static boolean disclosureAccepted;
     private final java.util.ArrayList<AlertDialog> dialogs = new java.util.ArrayList<>();
 
     @Override protected void onCreate(Bundle state) {
@@ -30,7 +33,7 @@ public abstract class LockedActivity extends Activity {
 
     protected abstract void onUnlocked();
     protected void onVaultLocked() { }
-    protected final boolean isVaultUnlocked() { return unlocked && foreground; }
+    protected final boolean isVaultUnlocked() { return unlocked && foreground && !disclosurePending; }
 
     protected final void showSecureDialog(AlertDialog.Builder builder) {
         AlertDialog dialog = builder.create();
@@ -43,6 +46,16 @@ public abstract class LockedActivity extends Activity {
     @Override protected void onStart() {
         super.onStart();
         foreground = true;
+        foregroundActivities++;
+        if (!disclosureAccepted && !getSharedPreferences("tvvault_disclosure", MODE_PRIVATE).getBoolean("hide", false)) {
+            showDisclosure();
+            return;
+        }
+        continueEntry();
+    }
+
+    private void continueEntry() {
+        disclosurePending = false;
         boolean enabled = new PinStore(this).isEnabled();
         if (enabled && !pinAtUnlock) { unlocked = false; onVaultLocked(); }
         if (!unlocked) {
@@ -60,6 +73,8 @@ public abstract class LockedActivity extends Activity {
     @Override protected void onStop() {
         super.onStop();
         foreground = false;
+        foregroundActivities = Math.max(0, foregroundActivities - 1);
+        if (foregroundActivities == 0) disclosureAccepted = false;
         for (AlertDialog dialog : new java.util.ArrayList<>(dialogs)) dialog.dismiss();
         dialogs.clear();
         generation++;
@@ -73,7 +88,44 @@ public abstract class LockedActivity extends Activity {
         }
     }
 
-    /** A plain access gate; no PIN reset bypass and no mandatory terms. */
+    private void showDisclosure() {
+        disclosurePending = true;
+        unlocked = false;
+        LinearLayout root = new LinearLayout(this);
+        root.setOrientation(LinearLayout.VERTICAL);
+        int pad = Math.round(22 * getResources().getDisplayMetrics().density);
+        root.setPadding(pad,pad,pad,pad);
+        root.setBackgroundColor(Color.rgb(8,15,24));
+        root.setImportantForAutofill(View.IMPORTANT_FOR_AUTOFILL_NO_EXCLUDE_DESCENDANTS);
+        TextView title = new TextView(this); title.setText(R.string.disclaimer_title);
+        title.setTextSize(25); title.setTextColor(Color.WHITE); root.addView(title);
+        android.widget.ScrollView scroll = new android.widget.ScrollView(this);
+        TextView body = new TextView(this); body.setTextSize(17); body.setTextColor(Color.WHITE);
+        body.setPadding(0,pad/2,0,pad/2);
+        body.setText(getString(R.string.security_with_credit, getString(R.string.security_details), getString(R.string.credit)));
+        scroll.addView(body); scroll.setFocusable(true);
+        root.addView(scroll,new LinearLayout.LayoutParams(-1,0,1f));
+        android.widget.CheckBox remember = new android.widget.CheckBox(this);
+        remember.setText(R.string.dont_show_again); remember.setTextSize(17); remember.setTextColor(Color.WHITE);
+        root.addView(remember);
+        LinearLayout actions = new LinearLayout(this);
+        Button accept = new Button(this); accept.setText(R.string.accept);
+        Button refuse = new Button(this); refuse.setText(R.string.refuse);
+        actions.addView(accept,new LinearLayout.LayoutParams(0,-2,1f));
+        actions.addView(refuse,new LinearLayout.LayoutParams(0,-2,1f)); root.addView(actions);
+        refuse.setOnClickListener(v -> finish());
+        accept.setOnClickListener(v -> {
+            if (!getSharedPreferences("tvvault_disclosure",MODE_PRIVATE).edit().putBoolean("hide",remember.isChecked()).commit()) {
+                android.widget.Toast.makeText(this,R.string.disclaimer_save_error,android.widget.Toast.LENGTH_LONG).show();
+                return;
+            }
+            disclosureAccepted = true;
+            continueEntry();
+        });
+        setContentView(root); scroll.requestFocus();
+    }
+
+    /** PIN access gate. */
     private void showGate() {
         LinearLayout root = new LinearLayout(this);
         root.setOrientation(LinearLayout.VERTICAL);
@@ -86,11 +138,10 @@ public abstract class LockedActivity extends Activity {
         title.setTextSize(28);
         title.setTextColor(Color.WHITE);
         root.addView(title);
-        EditText input = new EditText(this);
+        EditText input = new SecretInput(this,true);
         input.setHint(R.string.pin_hint);
         input.setTextColor(Color.WHITE);
         input.setHintTextColor(Color.LTGRAY);
-        input.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_PASSWORD);
         input.setFilters(new InputFilter[]{new InputFilter.LengthFilter(12)});
         input.setSaveEnabled(false);
         input.setSingleLine(true);
@@ -121,7 +172,7 @@ public abstract class LockedActivity extends Activity {
             if (!PinStore.valid(value)) { error.setText(R.string.pin_format); return; }
             checking = true;
             unlock.setEnabled(false);
-            error.setText(R.string.checking_pin);
+            error.setText(pin.isLegacy() ? R.string.upgrading_pin : R.string.checking_pin);
             int attemptGeneration = generation;
             new Thread(() -> {
                 boolean accepted = false;

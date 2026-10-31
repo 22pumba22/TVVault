@@ -34,3 +34,9 @@ input device, test result and any compatibility limits.
 Store screenshots are pending: provide TV screenshots/photos showing the Home
 and synthetic-data vault in both languages. FLAG_SECURE blocks ordinary software
 screen captures by design. Do not disable it in a public release for screenshots.
+
+0.17.1 additions: first-open decline preserves data; Accept plus checkbox
+suppresses future notices; active PIN settings hide new/confirm fields;
+wrong current PIN cannot authorize change/disable; migration keeps the old PIN;
+single typed character becomes * after 650 ms, stored values start masked;
+Home fits in one page with Exit at top right; PIN page fills background.

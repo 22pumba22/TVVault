@@ -1,0 +1,1 @@
+One-page Home, refreshed icon/banner, faster PIN verification, current-PIN confirmation, first-open security notice and asterisk masking.

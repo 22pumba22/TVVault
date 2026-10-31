@@ -1,7 +1,9 @@
-# TV Vault 0.17.0
+# TV Vault 0.17.1
 
 Offline password manager for Android TV, created by Alex Cantini.
 Android 9 (API 28) or later. English UI by default, Italian on Italian systems.
+Single-screen Home with Exit at top right; initial security disclosure with
+Accept/Decline and optional Do not show again. Decline exits without deleting data.
 TV remote/D-pad navigation. Only apps that expose compatible Android Autofill
 fields can be filled. No Google Password Manager access or cloud account.
 
@@ -19,8 +21,10 @@ The existing Android Keystore alias TVVaultLocalKeyV1 and private
 SharedPreferences tvvault_secure/vault remain unchanged from 0.16.3.
 The app has no INTERNET permission, analytics or cloud synchronization.
 The optional PIN is an access gate, not a key-derivation password for the vault.
-Its salted verifier uses PBKDF2-HMAC-SHA256 (210,000 iterations); the PIN is
-not intentionally persisted in cleartext. Delays start after five failures,
+Its salted verifier is HMAC-SHA256 with a non-exportable Android Keystore key;
+the PIN is not intentionally persisted in cleartext. PINs saved by 0.17.0 are
+verified once with legacy PBKDF2 (210,000 iterations), then atomically upgraded
+after a successful unlock. That first unlock may still take several seconds. Delays start after five failures,
 persist across app restarts and rise from 30 seconds to a maximum of 300 seconds.
 When enabled, the gate applies to both entry points and reappears after the
 activity stops/backgrounds. A stopped PIN verification cannot unlock a new gate.

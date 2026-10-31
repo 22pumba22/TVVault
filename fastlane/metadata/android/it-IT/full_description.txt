@@ -13,3 +13,5 @@ Il PIN controlla l’accesso e non genera la chiave del vault. Senza PIN, chi pu
 La disponibilità di Autofill dipende da Android e dall’app destinataria. Le credenziali si inseriscono manualmente; non sono disponibili acquisizione automatica, importazione, esportazione o recupero. Cancellare i dati, disinstallare o perdere la chiave può causare la perdita definitiva del vault. Il PIN dimenticato non può essere recuperato.
 
 Progettata per Android TV. Richiede campi compatibili e l’attivazione del servizio Android Autofill. Versione minima Android: 9.
+
+L’avviso iniziale sulla sicurezza può essere accettato e nascosto alle aperture successive. Per modificare o disattivare un PIN attivo occorre reinserirlo.

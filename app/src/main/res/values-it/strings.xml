@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <resources>
     <string name="app_name">TV Vault</string>
     <string name="tagline">Sicuro · Semplice · Tuo</string>
@@ -8,7 +8,7 @@
     <string name="excluded_apps_hint">Scegli dove non mostrare TV Vault</string>
     <string name="vault">Vault</string>
     <string name="vault_hint">Visualizza e gestisci le credenziali salvate</string>
-    <string name="credit">TV Vault è un gestore di password creato da Alex Cantini.</string>
+    <string name="credit">TV Vault è un gestore password sviluppato da Alex Cantini.</string>
     <string name="exit">Esci</string>
     <string name="setup_autofill">Imposta TV Vault come servizio Autofill</string>
     <string name="setup_autofill_hint">Attiva o disattiva la compilazione delle password</string>
@@ -48,8 +48,8 @@
     <string name="fill_with_vault">Compila con TV Vault</string>
     <string name="open_local_vault">Apri il vault locale</string>
     <string name="autofill_error">TV Vault non riesce a preparare la compilazione.</string>
-    <string name="security_settings">Sicurezza e PIN facoltativo</string>
-    <string name="security_subtitle">Gestisci il blocco di accesso e leggi le informazioni sulla sicurezza</string>
+    <string name="security_settings">Sicurezza e PIN</string>
+    <string name="security_subtitle">Gestisci la protezione di accesso</string>
     <string name="locked">TV Vault bloccato</string>
     <string name="unlock_title">Sblocca TV Vault</string>
     <string name="pin_hint">PIN numerico (4–12 cifre)</string>
@@ -62,8 +62,8 @@
     <string name="pin_error">Impossibile leggere o salvare la protezione PIN. L’accesso resta protetto.</string>
     <string name="pin_wrong">PIN errato.</string>
     <string name="pin_on">PIN attivo</string>
-    <string name="pin_off">PIN disattivato (facoltativo)</string>
-    <string name="pin_description">Il PIN facoltativo blocca l’app e Autofill. Quando è attivo, viene richiesto di nuovo dopo il passaggio in background. È un blocco di accesso; l’archivio mantiene la cifratura esistente con Android Keystore. Scegli un PIN che ricordi: non può essere recuperato.</string>
+    <string name="pin_off">PIN disattivato</string>
+    <string name="pin_description">Ti consigliamo di impostare un PIN per proteggere l’accesso alle password. Scegline uno che ricordi: non può essere recuperato.</string>
     <string name="new_pin">Nuovo PIN (4–12 cifre)</string>
     <string name="confirm_pin">Conferma il nuovo PIN</string>
     <string name="change_pin">Modifica PIN</string>
@@ -71,7 +71,6 @@
     <string name="disable_pin">Disattiva PIN</string>
     <string name="pin_mismatch">I PIN non coincidono.</string>
     <string name="saving">Salvataggio…</string>
-    <string name="disable_pin_confirm">Consentire l’accesso a TV Vault e Autofill senza PIN? Le credenziali salvate rimangono cifrate.</string>
     <string name="security_info">Informazioni sulla sicurezza</string>
     <string name="security_details">Le credenziali restano su questo dispositivo, cifrate con AES-256-GCM e una chiave in Android Keystore. TV Vault non ha il permesso Internet né sincronizzazione cloud. Il PIN facoltativo controlla l’accesso all’app e Autofill; non genera la chiave di cifratura. Senza PIN, chi può usare l’app può accedere al vault. Un dispositivo con root o compromesso può esporre le credenziali. Autofill richiede app compatibili e il supporto di Android. Non esistono esportazione o recupero: cancellare i dati, disinstallare o perdere la chiave può causare la perdita definitiva del vault. TV Vault non è stato sottoposto a un audit di sicurezza indipendente.</string>
     <string name="vault_error_title">Vault non disponibile</string>
@@ -81,4 +80,15 @@
     <string name="other_app_title">Credenziale di un’altra app</string>
     <string name="other_app_warning">“%1$s” è associata a %2$s. Inviare le credenziali a %3$s? Continua solo se ritieni affidabile questa app.</string>
     <string name="fill_anyway">Compila questa app</string>
+    <string name="current_pin_prompt">Inserisci il PIN attuale per continuare.</string>
+    <string name="current_pin">PIN attuale</string>
+    <string name="continue_action">Continua</string>
+    <string name="save_pin">Salva nuovo PIN</string>
+    <string name="upgrading_pin">Aggiornamento della protezione PIN. Questo primo controllo può richiedere alcuni secondi…</string>
+    <string name="disclaimer_title">Informazioni sulla sicurezza</string>
+    <string name="dont_show_again">Non mostrare più</string>
+    <string name="accept">Accetta</string>
+    <string name="refuse">Rifiuta</string>
+    <string name="disclaimer_save_error">Impossibile salvare la scelta. Riprova.</string>
+    <string name="security_with_credit">%1$s\n\n%2$s</string>
 </resources>

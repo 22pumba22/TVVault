@@ -29,3 +29,7 @@ backup/transfer exclusions and F-Droid release preparation.
 
 The original icon and TV banner are preserved. Before public submission the
 publisher must confirm redistribution rights for the supplied artwork.
+
+0.17.1 changes: compact single-page Home, corrected generated artwork,
+first-open disclosure, secret-character masking, current-PIN authorization
+for settings changes and Android-Keystore HMAC verifier with legacy migration.
