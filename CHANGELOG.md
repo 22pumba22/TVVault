@@ -1,3 +1,10 @@
+# 0.17.6
+- Add About beside Exit on Home.
+- Centered dark popup matches the approved layout with project information,
+  voluntary Lightning support, the supplied QR and a high-contrast Close button.
+- English and Italian texts, D-pad focus and secure background handling.
+- Existing vault, PIN and Autofill behavior unchanged.
+
 # 0.17.5
 - Exit on the initial app unlock screen; Home on internal navigation buttons in both languages.
 - Distinct messages for an incorrect PIN and an invalid PIN format.

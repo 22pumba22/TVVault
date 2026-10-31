@@ -117,11 +117,16 @@ public abstract class LockedActivity extends Activity {
 
     protected final void showSecureDialog(AlertDialog.Builder builder) {
         AlertDialog dialog = builder.create();
+        showCustomSecureDialog(dialog);
+        TvTheme.styleDialog(dialog);
+    }
+
+    /** Custom popup retains its own approved styling and shares lifecycle/security handling. */
+    protected final void showCustomSecureDialog(AlertDialog dialog) {
         dialogs.add(dialog);
         dialog.setOnDismissListener(d -> dialogs.remove(dialog));
         dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
         dialog.show();
-        TvTheme.styleDialog(dialog);
     }
 
     @Override protected void onStart() {

@@ -10,8 +10,8 @@ android {
         applicationId = "com.alexcantini.tvvault"
         minSdk = 28
         targetSdk = 35
-        versionCode = 23
-        versionName = "0.17.5"
+        versionCode = 24
+        versionName = "0.17.6"
     }
 
     dependenciesInfo {

@@ -1,0 +1,1 @@
+Il tasto About sulla Home apre un popup scuro con informazioni sul progetto e sostegno facoltativo tramite Bitcoin Lightning. QR fornito, testi italiano/inglese e pulsante Chiudi per il telecomando.

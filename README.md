@@ -1,4 +1,4 @@
-# TV Vault 0.17.5
+# TV Vault 0.17.6
 
 Offline password manager for Android TV, created by Alex Cantini.
 Android 9 (API 28) or later. English UI by default, Italian on Italian systems.
@@ -95,3 +95,12 @@ An authenticated round trip to the explicitly resolved system Autofill settings
 does not ask for the PIN again. This exception expires after two minutes and is
 revoked by screen-off, a new launcher intent or process death. Other background
 transitions retain normal locking. Secret UI is cleared while settings are open.
+
+## About popup (0.17.6)
+About is available next to Exit on Home. It opens a centered, rounded dark popup
+over the existing Home, with project information, optional Bitcoin Lightning
+support, the user-supplied QR and pumba22@blink.sv. It has a visible Close button,
+TV remote focus, and English/Italian resources. It is not a separate activity or
+full-screen page. It makes no network requests and never opens a wallet or mail
+application. Donation is voluntary and does not unlock or restrict any feature.
+Screen protection and background locking apply to the dialog as to other UI.

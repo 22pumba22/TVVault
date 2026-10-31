@@ -97,4 +97,14 @@
     <string name="enable_autofill_pin_info">Autofill richiederà il PIN. L’apertura del vault resta protetta.</string>
     <string name="disable_autofill_pin_info">Autofill potrà usare le credenziali salvate senza PIN. Il PIN resterà richiesto per aprire il vault.</string>
     <string name="home">Home</string>
+    <string name="about">About</string>
+    <string name="about_title">Informazioni</string>
+    <string name="about_intro">TV Vault è un gestore di password sviluppato da Alex Cantini.</string>
+    <string name="about_support">❤️ Sostieni questo progetto</string>
+    <string name="about_free">Questa app è gratuita e lo resterà.</string>
+    <string name="about_donate">Se ti è utile e vuoi supportarne lo sviluppo, puoi offrirmi un caffè con Bitcoin Lightning. ⚡</string>
+    <string name="about_scan">Scansiona il QR code per donare.</string>
+    <string name="about_thanks">Grazie di cuore! ☕</string>
+    <string name="about_close">Chiudi</string>
+    <string name="about_qr_description">QR code Lightning per donare a pumba22@blink.sv</string>
 </resources>

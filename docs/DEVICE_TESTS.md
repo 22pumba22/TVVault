@@ -66,3 +66,12 @@ provider during automated tests. Check that the provider is unchanged afterward.
 Inject screen-off into the preview receiver and expire the in-memory deadline to
 verify those events revoke the exception; ordinary background must still lock.
 Also check per-visit settings access, one-second rendered masking and process restart.
+
+0.17.6: UiProbe176 uses a test-only localized MainActivity host. Verify About and
+Exit on the single-page Home; open the native AlertDialog and assert that the
+same Activity stays unlocked and both dialog dimensions are below screen size.
+Check every localized paragraph, the supplied QR checksum and exact address.
+Close must be focused; Close and TV Back dismiss only the popup and restore Home.
+Backgrounding must dismiss the popup and require PIN on return. Repeat in Italian
+and English, capture only the synthetic preview, then test after process restart.
+Production manifest must contain no test runner or localized preview Activity.

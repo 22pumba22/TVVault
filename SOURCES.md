@@ -33,3 +33,8 @@ publisher must confirm redistribution rights for the supplied artwork.
 0.17.1 changes: compact single-page Home, corrected generated artwork,
 first-open disclosure, secret-character masking, current-PIN authorization
 for settings changes and Android-Keystore HMAC verifier with legacy migration.
+
+Donation QR: original image supplied by Alex Cantini on 2026-10-31 for this app;
+included byte-for-byte as donation_lightning.png. The native view presents the
+QR region with an added white margin, retaining the supplied modules and logo.
+Displayed donation address: pumba22@blink.sv. No QR generation/network dependency.

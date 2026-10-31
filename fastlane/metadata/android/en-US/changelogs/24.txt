@@ -1,0 +1,1 @@
+About button on Home opens a dark popup with project information and optional Bitcoin Lightning support. Supplied donation QR, English/Italian texts and remote-friendly Close button.

@@ -11,8 +11,8 @@ $signer = Get-ChildItem -LiteralPath (Join-Path $sdkPath 'build-tools') -Filter 
     Sort-Object FullName -Descending | Select-Object -First 1
 if (-not $signer) { throw 'apksigner non trovato nel SDK Android.' }
 $keytool = Join-Path $env:JAVA_HOME 'bin/keytool.exe'
-$unsigned = Join-Path $PSScriptRoot 'TVVault_v0.17.5_release-unsigned.apk'
-$outputApk = Join-Path $PSScriptRoot 'TVVault_v0.17.5_release.apk'
+$unsigned = Join-Path $PSScriptRoot 'TVVault_v0.17.6_release-unsigned.apk'
+$outputApk = Join-Path $PSScriptRoot 'TVVault_v0.17.6_release.apk'
 $pendingApk = Join-Path $PSScriptRoot '.TVVault-signing-pending.apk'
 if (-not (Test-Path -LiteralPath $unsigned)) { throw 'Lo script deve essere accanto all APK release-unsigned.' }
 if (-not $KeystorePath) { $KeystorePath = Read-Host 'Percorso completo in cui conservare la chiave definitiva .jks (fuori dal repository)' }

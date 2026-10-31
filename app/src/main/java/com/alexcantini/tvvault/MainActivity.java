@@ -277,6 +277,11 @@ public class MainActivity extends LockedActivity {
         TextView title = text("TV VAULT",26); title.setTypeface(Typeface.DEFAULT,Typeface.BOLD);
         heading.addView(title); heading.addView(text(getString(R.string.tagline),14));
         header.addView(heading,new LinearLayout.LayoutParams(0,-2,1f));
+        Button about = tvButton(getString(R.string.about)); about.setMinHeight(dp(44));
+        about.setOnClickListener(v -> AboutDialog.show(this));
+        LinearLayout.LayoutParams aboutParams = new LinearLayout.LayoutParams(dp(118),dp(46));
+        aboutParams.rightMargin = dp(10);
+        header.addView(about,aboutParams);
         Button exit = tvButton(getString(R.string.exit)); exit.setMinHeight(dp(44));
         exit.setOnClickListener(v -> finish());
         header.addView(exit,new LinearLayout.LayoutParams(dp(118),dp(46)));
@@ -303,11 +308,13 @@ public class MainActivity extends LockedActivity {
         LinearLayout.LayoutParams bottomParams = new LinearLayout.LayoutParams(-1,0,1f); bottomParams.bottomMargin=dp(10);
         root.addView(bottom,bottomParams);
         LinearLayout autofill = autofillServiceCard(); root.addView(autofill,new LinearLayout.LayoutParams(-1,dp(76)));
-        for(View view : new View[]{exit,select,vault,excluded,security,autofill}) assignId(view);
+        for(View view : new View[]{about,exit,select,vault,excluded,security,autofill}) assignId(view);
         select.setNextFocusRightId(vault.getId()); vault.setNextFocusLeftId(select.getId());
         excluded.setNextFocusRightId(security.getId()); security.setNextFocusLeftId(excluded.getId());
         linkVertical(select,excluded); linkVertical(vault,security);
-        select.setNextFocusUpId(exit.getId()); vault.setNextFocusUpId(exit.getId()); exit.setNextFocusDownId(vault.getId());
+        about.setNextFocusRightId(exit.getId()); exit.setNextFocusLeftId(about.getId());
+        about.setNextFocusDownId(vault.getId());
+        select.setNextFocusUpId(about.getId()); vault.setNextFocusUpId(exit.getId()); exit.setNextFocusDownId(vault.getId());
         excluded.setNextFocusDownId(autofill.getId()); security.setNextFocusDownId(autofill.getId()); autofill.setNextFocusUpId(security.getId());
         setContentView(root); select.requestFocus();
     }
