@@ -27,8 +27,8 @@ handling, selective field filling, cross-app confirmation, Android 12+
 PendingIntent mutability, localized resources, diagnostic-log removal,
 backup/transfer exclusions and F-Droid release preparation.
 
-The original icon and TV banner are preserved. Before public submission the
-publisher must confirm redistribution rights for the supplied artwork.
+The publisher confirmed on 2026-10-31 that the supplied icon, TV banner and
+donation QR may be distributed publicly with the open-source project.
 
 0.17.1 changes: compact single-page Home, corrected generated artwork,
 first-open disclosure, secret-character masking, current-PIN authorization

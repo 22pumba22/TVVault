@@ -3,15 +3,15 @@ Categories:
   - Security
 License: GPL-3.0-only
 AuthorName: Alex Cantini
-SourceCode: '@SOURCE_REPOSITORY_URL@'
-IssueTracker: '@ISSUE_TRACKER_URL@'
+SourceCode: 'https://github.com/22pumba22/TVVault'
+IssueTracker: 'https://github.com/22pumba22/TVVault/issues'
 
 AutoName: TV Vault
 
 RepoType: git
-Repo: '@GIT_CLONE_URL@'
+Repo: 'https://github.com/22pumba22/TVVault.git'
 
-Binaries: '@RELEASE_DOWNLOAD_BASE@/v%v/TVVault_v%v_release.apk'
+Binaries: 'https://github.com/22pumba22/TVVault/releases/download/v%v/TVVault_v%v_release.apk'
 
 Builds:
   - versionName: 0.17.6
@@ -21,7 +21,7 @@ Builds:
     gradle:
       - yes
 
-AllowedAPKSigningKeys: '@RELEASE_CERTIFICATE_SHA256@'
+AllowedAPKSigningKeys: '55a4f40ae164269307f9c1fff7b0ef6ab479f9ddefe658ce733a8de1db11885b'
 
 AutoUpdateMode: Version
 UpdateCheckMode: Tags ^v[0-9]+(\.[0-9]+)*$

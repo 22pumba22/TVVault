@@ -68,6 +68,8 @@ A definitive signing key is not embedded. The release signing helper is delivere
 separately and requests secrets locally. Use a recent apksigner supporting
 --alignment-preserved true. Keep private keys and passwords out of source control
 and back up the key and password separately.
+Source repository: https://github.com/22pumba22/TVVault
+
 F-Droid preparation is in docs/FDROID.md. Fastlane metadata is under
 fastlane/metadata/android/en-US and it-IT. Real device screenshots are still
 required. Compilation and local tests do not imply F-Droid acceptance.
@@ -76,7 +78,7 @@ required. Compilation and local tests do not imply F-Droid acceptance.
 GPL-3.0-only; see LICENSE, NOTICE and SOURCES.md. The supplied original project
 records a derivation from GPL Bitwarden Autofill code. Its exact referenced tag
 and license were verified. Original artwork is retained and fitted to 16:9 TV banners;
-redistribution rights must be confirmed by the publisher before submission.
+the publisher has confirmed public redistribution rights for the supplied artwork.
 
 Secret entry reveals the latest typed character for 1000 ms then masks it automatically.
 A layout span refresh invalidates cached hardware glyphs; stored and pasted values stay masked.
@@ -104,3 +106,13 @@ TV remote focus, and English/Italian resources. It is not a separate activity or
 full-screen page. It makes no network requests and never opens a wallet or mail
 application. Donation is voluntary and does not unlock or restrict any feature.
 Screen protection and background locking apply to the dialog as to other UI.
+
+## Interface gallery
+
+Synthetic demonstration accounts only.
+
+![Home](docs/images/en/01-home.png)
+
+![Vault](docs/images/en/02-vault.png)
+
+![About](docs/images/en/04-about.png)

@@ -45,9 +45,10 @@ Screenshots for the store should show only synthetic data and no PIN/credentials
 FLAG_SECURE intentionally prevents ordinary software screen captures.
 
 ## Reporting
-Before public distribution, configure a public issue tracker and a private
-security contact in this document/store metadata. Do not post credentials,
-PINs, vault files or signing keys in public issues.
+Use https://github.com/22pumba22/TVVault/issues for ordinary bug reports.
+For vulnerabilities, use GitHub private vulnerability reporting when available.
+If it is unavailable, open an issue asking for a private contact without including
+vulnerability details. Never post credentials, PINs, vault files or signing keys.
 
 ## Autofill choice (0.17.3)
 An enabled vault PIN protects application entry. The separate Autofill PIN
