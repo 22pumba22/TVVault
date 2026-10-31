@@ -88,31 +88,19 @@ public class AutofillAuthActivity extends LockedActivity {
     }
 
     private Button tvButton(String value) {
-        Button b = new Button(this);
-        b.setText(value);
-        b.setTextSize(19);
-        b.setAllCaps(false);
-        b.setFocusable(true);
-        b.setFocusableInTouchMode(true);
-        b.setMinHeight(78);
-        b.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
-        b.setOnFocusChangeListener((v, hasFocus) -> {
-            v.setAlpha(hasFocus ? 1f : 0.78f);
-            v.setScaleX(hasFocus ? 1.03f : 1f);
-            v.setScaleY(hasFocus ? 1.03f : 1f);
-        });
-        return b;
+        Button b=new Button(this);b.setText(value);TvTheme.styleButton(b);
+        b.setMinHeight(TvTheme.dp(this,68));b.setGravity(Gravity.START|Gravity.CENTER_VERTICAL);return b;
     }
 
     private void showPicker() {
         LinearLayout root = new LinearLayout(this);
         root.setOrientation(LinearLayout.VERTICAL);
         root.setPadding(42, 30, 42, 30);
-        root.setBackgroundColor(Color.rgb(16,16,16));
+        root.setBackgroundColor(TvTheme.BG);
 
         root.addView(text("TV Vault", 30));
         TextView subtitle = text(getString(R.string.choose_credential), 17);
-        subtitle.setTextColor(Color.LTGRAY);
+        subtitle.setTextColor(TvTheme.SECONDARY);
         root.addView(subtitle);
 
         ScrollView scroll = new ScrollView(this);

@@ -1,4 +1,4 @@
-# TV Vault 0.17.1
+# TV Vault 0.17.2
 
 Offline password manager for Android TV, created by Alex Cantini.
 Android 9 (API 28) or later. English UI by default, Italian on Italian systems.
@@ -26,8 +26,9 @@ the PIN is not intentionally persisted in cleartext. PINs saved by 0.17.0 are
 verified once with legacy PBKDF2 (210,000 iterations), then atomically upgraded
 after a successful unlock. That first unlock may still take several seconds. Delays start after five failures,
 persist across app restarts and rise from 30 seconds to a maximum of 300 seconds.
-When enabled, the gate applies to both entry points and reappears after the
-activity stops/backgrounds. A stopped PIN verification cannot unlock a new gate.
+When enabled, the gate applies to both entry points and reappears on pause,
+background return, a new launcher intent and screen-off/on (TV standby).
+Home clearly reports whether a PIN is enabled or has not been configured. A stopped PIN verification cannot unlock a new gate.
 Screenshots, recent-app previews and ordinary screen capture are blocked by
 FLAG_SECURE on vault activities. Device compromise/root is outside this protection.
 

@@ -49,7 +49,6 @@
     <string name="open_local_vault">Apri il vault locale</string>
     <string name="autofill_error">TV Vault non riesce a preparare la compilazione.</string>
     <string name="security_settings">Sicurezza e PIN</string>
-    <string name="security_subtitle">Gestisci la protezione di accesso</string>
     <string name="locked">TV Vault bloccato</string>
     <string name="unlock_title">Sblocca TV Vault</string>
     <string name="pin_hint">PIN numerico (4–12 cifre)</string>
@@ -91,4 +90,7 @@
     <string name="refuse">Rifiuta</string>
     <string name="disclaimer_save_error">Impossibile salvare la scelta. Riprova.</string>
     <string name="security_with_credit">%1$s\n\n%2$s</string>
+    <string name="home_pin_active">PIN attivo · Accesso protetto</string>
+    <string name="home_pin_unset">PIN non impostato · Consigliato</string>
+    <string name="pin_enabled_notice">PIN attivato. Verrà richiesto all’apertura e al ritorno nell’app.</string>
 </resources>

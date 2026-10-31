@@ -40,3 +40,10 @@ suppresses future notices; active PIN settings hide new/confirm fields;
 wrong current PIN cannot authorize change/disable; migration keeps the old PIN;
 single typed character becomes * after 650 ms, stored values start masked;
 Home fits in one page with Exit at top right; PIN page fills background.
+
+0.17.2: verify Home reports whether the PIN is actually configured. Enabling
+requires entering/confirming a PIN and selecting Enable PIN. Hiding the security
+notice must never disable PIN protection. With PIN active test repeated launcher
+open, Home/background return, TV standby and a full device reboot. The automated
+isolated tests cover process restart, launcher re-entry, background and injected
+screen events; they do not turn off or reboot the user's television.

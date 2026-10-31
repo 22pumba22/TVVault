@@ -1,0 +1,1 @@
+Stronger PIN relocking for reopening and TV standby, explicit PIN status on Home and high-contrast dark controls with blue focus.

@@ -3,6 +3,11 @@ package com.alexcantini.tvvault;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.Build;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.InputFilter;
@@ -22,6 +27,15 @@ public abstract class LockedActivity extends Activity {
     private boolean pinAtUnlock;
     private boolean foreground;
     private boolean disclosurePending;
+    private boolean gateVisible;
+    private boolean receiverRegistered;
+    private final BroadcastReceiver screenReceiver = new BroadcastReceiver() {
+        @Override public void onReceive(Context context,Intent intent) {
+            if (!new PinStore(LockedActivity.this).isEnabled()) return;
+            if (Intent.ACTION_SCREEN_OFF.equals(intent.getAction())) invalidateAccess();
+            else if (foreground && !disclosurePending && !unlocked && !gateVisible) showGate();
+        }
+    };
     private static int foregroundActivities;
     private static boolean disclosureAccepted;
     private final java.util.ArrayList<AlertDialog> dialogs = new java.util.ArrayList<>();
@@ -29,6 +43,13 @@ public abstract class LockedActivity extends Activity {
     @Override protected void onCreate(Bundle state) {
         super.onCreate(state);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
+        getWindow().setStatusBarColor(TvTheme.BG);
+        getWindow().setNavigationBarColor(TvTheme.BG);
+        IntentFilter filter=new IntentFilter();
+        filter.addAction(Intent.ACTION_SCREEN_OFF);filter.addAction(Intent.ACTION_SCREEN_ON);filter.addAction(Intent.ACTION_USER_PRESENT);
+        if(Build.VERSION.SDK_INT>=33)registerReceiver(screenReceiver,filter,Context.RECEIVER_NOT_EXPORTED);
+        else registerReceiver(screenReceiver,filter);
+        receiverRegistered=true;
     }
 
     protected abstract void onUnlocked();
@@ -41,6 +62,7 @@ public abstract class LockedActivity extends Activity {
         dialog.setOnDismissListener(d -> dialogs.remove(dialog));
         dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
         dialog.show();
+        TvTheme.styleDialog(dialog);
     }
 
     @Override protected void onStart() {
@@ -66,26 +88,58 @@ public abstract class LockedActivity extends Activity {
 
     private void grantAccess() {
         unlocked = true;
+        gateVisible = false;
         pinAtUnlock = new PinStore(this).isEnabled();
         onUnlocked();
     }
 
-    @Override protected void onStop() {
-        super.onStop();
-        foreground = false;
-        foregroundActivities = Math.max(0, foregroundActivities - 1);
-        if (foregroundActivities == 0) disclosureAccepted = false;
-        for (AlertDialog dialog : new java.util.ArrayList<>(dialogs)) dialog.dismiss();
-        dialogs.clear();
+    /** Lock before a resumed activity can be reused by a TV launcher or standby. */
+    private void invalidateAccess() {
         generation++;
-        checking = false;
-        if (new PinStore(this).isEnabled()) {
-            unlocked = false;
-            onVaultLocked();
-            TextView locked = new TextView(this);
-            locked.setText(R.string.locked);
+        checking=false;
+        gateVisible=false;
+        unlocked=false;
+        onVaultLocked();
+        if (!disclosurePending) {
+            TextView locked=new TextView(this); locked.setText(R.string.locked);
+            locked.setTextColor(TvTheme.TEXT);locked.setTextSize(24);locked.setBackgroundColor(TvTheme.BG);
             setContentView(locked);
         }
+        for(AlertDialog dialog:new java.util.ArrayList<>(dialogs))dialog.dismiss();
+        dialogs.clear();
+    }
+    @Override protected void onPause() {
+        // Do not discard an idle PIN input when a TV keyboard briefly takes focus.
+        // A pending verification must never unlock an activity after it has paused.
+        if(new PinStore(this).isEnabled() && (unlocked || checking)) invalidateAccess();
+        super.onPause();
+    }
+    @Override protected void onResume() {
+        super.onResume();
+        if(foreground && !disclosurePending && !unlocked && !gateVisible && new PinStore(this).isEnabled())showGate();
+    }
+    @Override protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if(new PinStore(this).isEnabled()) {
+            invalidateAccess();
+            if(foreground && !disclosurePending)showGate();
+        }
+    }
+    @Override protected void onStop() {
+        super.onStop();
+        foreground=false;
+        foregroundActivities=Math.max(0,foregroundActivities-1);
+        if(foregroundActivities==0)disclosureAccepted=false;
+        if(new PinStore(this).isEnabled())invalidateAccess();
+        else {
+            generation++;checking=false;
+            for(AlertDialog dialog:new java.util.ArrayList<>(dialogs))dialog.dismiss();
+            dialogs.clear();
+        }
+    }
+    @Override protected void onDestroy() {
+        if(receiverRegistered)unregisterReceiver(screenReceiver);
+        super.onDestroy();
     }
 
     private void showDisclosure() {
@@ -106,12 +160,13 @@ public abstract class LockedActivity extends Activity {
         scroll.addView(body); scroll.setFocusable(true);
         root.addView(scroll,new LinearLayout.LayoutParams(-1,0,1f));
         android.widget.CheckBox remember = new android.widget.CheckBox(this);
-        remember.setText(R.string.dont_show_again); remember.setTextSize(17); remember.setTextColor(Color.WHITE);
+        remember.setText(R.string.dont_show_again); TvTheme.styleCheckbox(remember);
         root.addView(remember);
         LinearLayout actions = new LinearLayout(this);
-        Button accept = new Button(this); accept.setText(R.string.accept);
-        Button refuse = new Button(this); refuse.setText(R.string.refuse);
-        actions.addView(accept,new LinearLayout.LayoutParams(0,-2,1f));
+        Button accept = TvTheme.button(this,R.string.accept);
+        Button refuse = TvTheme.button(this,R.string.refuse);
+        LinearLayout.LayoutParams acceptParams=new LinearLayout.LayoutParams(0,-2,1f);acceptParams.rightMargin=TvTheme.dp(this,12);
+        actions.addView(accept,acceptParams);
         actions.addView(refuse,new LinearLayout.LayoutParams(0,-2,1f)); root.addView(actions);
         refuse.setOnClickListener(v -> finish());
         accept.setOnClickListener(v -> {
@@ -127,6 +182,7 @@ public abstract class LockedActivity extends Activity {
 
     /** PIN access gate. */
     private void showGate() {
+        gateVisible = true;
         LinearLayout root = new LinearLayout(this);
         root.setOrientation(LinearLayout.VERTICAL);
         int pad = Math.round(28 * getResources().getDisplayMetrics().density);
@@ -141,24 +197,22 @@ public abstract class LockedActivity extends Activity {
         EditText input = new SecretInput(this,true);
         input.setHint(R.string.pin_hint);
         input.setTextColor(Color.WHITE);
-        input.setHintTextColor(Color.LTGRAY);
+        input.setHintTextColor(TvTheme.SECONDARY);
+        TvTheme.styleField(input);
         input.setFilters(new InputFilter[]{new InputFilter.LengthFilter(12)});
         input.setSaveEnabled(false);
         root.addView(input);
         TextView error = new TextView(this);
         error.setTextColor(Color.WHITE);
         root.addView(error);
-        Button unlock = new Button(this);
-        unlock.setText(R.string.unlock);
+        Button unlock = TvTheme.button(this,R.string.unlock);
         root.addView(unlock);
-        Button help = new Button(this);
-        help.setText(R.string.forgot_pin);
+        Button help = TvTheme.button(this,R.string.forgot_pin);
         help.setOnClickListener(v -> showSecureDialog(new AlertDialog.Builder(this)
                 .setTitle(R.string.forgot_pin).setMessage(R.string.forgot_pin_info)
                 .setPositiveButton(android.R.string.ok, null)));
         root.addView(help);
-        Button cancel = new Button(this);
-        cancel.setText(R.string.cancel);
+        Button cancel = TvTheme.button(this,R.string.cancel);
         cancel.setOnClickListener(v -> finish());
         root.addView(cancel);
         unlock.setOnClickListener(v -> {

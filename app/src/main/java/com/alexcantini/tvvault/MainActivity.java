@@ -49,11 +49,11 @@ public class MainActivity extends LockedActivity {
 
     private static final int BG = Color.rgb(8, 15, 24);
     private static final int CARD = Color.rgb(18, 30, 44);
-    private static final int CARD_FOCUS = Color.rgb(49, 68, 92);
-    private static final int BORDER = Color.rgb(60, 83, 108);
-    private static final int ACCENT = Color.rgb(31, 132, 255);
+    private static final int CARD_FOCUS = TvTheme.FOCUS;
+    private static final int BORDER = TvTheme.BORDER;
+    private static final int ACCENT = TvTheme.EDGE;
     private static final int GREEN = Color.rgb(71, 201, 92);
-    private static final int MUTED = Color.rgb(177, 188, 201);
+    private static final int MUTED = TvTheme.SECONDARY;
 
     private final ArrayList<Credential> credentials = new ArrayList<>();
     private CryptoStore store;
@@ -135,7 +135,7 @@ public class MainActivity extends LockedActivity {
 
     private GradientDrawable cardBackground(boolean focused) {
         GradientDrawable d = rounded(focused ? CARD_FOCUS : CARD, 10);
-        d.setStroke(dp(focused ? 2 : 1), focused ? ACCENT : BORDER);
+        d.setStroke(dp(focused ? 3 : 2), focused ? ACCENT : BORDER);
         return d;
     }
 
@@ -146,23 +146,11 @@ public class MainActivity extends LockedActivity {
         view.setScaleX(1f);
         view.setScaleY(1f);
         view.setClipToOutline(true);
-        view.setAlpha(focused ? 1f : 0.96f);
+        view.setAlpha(1f);
     }
 
     private Button tvButton(String value) {
-        Button b = new Button(this);
-        b.setText(value);
-        b.setTextSize(17);
-        b.setTextColor(Color.WHITE);
-        b.setAllCaps(false);
-        b.setFocusable(true);
-        b.setFocusableInTouchMode(true);
-        b.setMinHeight(dp(52));
-        b.setPadding(dp(18), dp(8), dp(18), dp(8));
-        b.setBackground(cardBackground(false));
-        b.setClipToOutline(true);
-        b.setOnFocusChangeListener((v, hasFocus) -> applyCardFocus(v, hasFocus));
-        return b;
+        Button b=new Button(this); b.setText(value); TvTheme.styleButton(b); return b;
     }
 
     private void assignId(View v) {
@@ -297,7 +285,7 @@ public class MainActivity extends LockedActivity {
                 });
         LinearLayout vault = homeCard("LOCK",Color.rgb(43,142,67),getString(R.string.vault),getString(R.string.vault_hint),this::showVault);
         LinearLayout excluded = homeCard("OFF",Color.rgb(109,55,177),getString(R.string.excluded_apps),getString(R.string.excluded_apps_hint),this::showExclusions);
-        LinearLayout security = homeCard("PIN",Color.rgb(75,94,116),getString(R.string.security_settings),getString(R.string.security_subtitle),
+        LinearLayout security = homeCard("PIN",Color.rgb(75,94,116),getString(R.string.security_settings),getString(new PinStore(this).isEnabled()?R.string.home_pin_active:R.string.home_pin_unset),
                 ()->startActivity(new Intent(this,PinSettingsActivity.class)));
         LinearLayout top = new LinearLayout(this), bottom = new LinearLayout(this);
         for(LinearLayout line : new LinearLayout[]{top,bottom}) line.setBaselineAligned(false);
@@ -557,6 +545,7 @@ public class MainActivity extends LockedActivity {
         });
         // GOLDEN v0.13 behavior: no Autofill inside TV Vault itself.
         e.setImportantForAutofill(View.IMPORTANT_FOR_AUTOFILL_NO);
+        TvTheme.styleField(e);
         return e;
     }
 

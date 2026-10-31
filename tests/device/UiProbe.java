@@ -33,7 +33,8 @@ public class UiProbe extends Instrumentation {
     private final Bundle results = new Bundle();
     private int checks;
     private boolean skipBench;
-    @Override public void onCreate(Bundle args) { super.onCreate(args); skipBench = args != null && "true".equals(args.getString("fast")); start(); }
+    private boolean coldPhase;
+    @Override public void onCreate(Bundle args) { super.onCreate(args); skipBench = args != null && "true".equals(args.getString("fast"));coldPhase=args!=null&&"cold".equals(args.getString("phase")); start(); }
     private void require(boolean value, String message) {
         if (!value) throw new AssertionError(message);
         results.putString("check_" + (++checks),message);
@@ -95,6 +96,24 @@ public class UiProbe extends Instrumentation {
         }
         throw new AssertionError("Timed out: "+activity.getString(id));
     }
+    private void screenEvent(Context context,String action) {
+        ui(()-> {
+            try {
+                java.lang.reflect.Field field=LockedActivity.class.getDeclaredField("screenReceiver");field.setAccessible(true);
+                ((android.content.BroadcastReceiver)field.get(activity)).onReceive(context,new Intent(action));
+            }catch(Exception e){throw new RuntimeException(e);}
+        });
+    }
+    private void runColdPhase(Context context) {
+        require(new PinStore(context).isEnabled(),"PIN stays enabled after full process stop/restart");
+        require(context.getSharedPreferences("tvvault_disclosure",0).getBoolean("hide",false),"Disclaimer hide preference persists independently");
+        launch();waitForText(R.string.unlock);require(fields().size()==1,"Cold process launch requires PIN despite hidden disclaimer");
+        shot("cold-start-unlock");
+        enter(0,"1234");click(R.string.unlock);waitForText(R.string.select_app);
+        require(find(R.string.home_pin_active).isShown(),"Correct PIN unlocks after full process restart");
+        click(R.string.vault);
+        require(all(activity.getWindow().getDecorView()).stream().anyMatch(v->v instanceof TextView&&((TextView)v).getText().toString().equals("Demo")),"Encrypted synthetic credentials survive process restart");
+    }
     @Override public void onStart() {
         try {
             Context context=getTargetContext();
@@ -108,6 +127,7 @@ public class UiProbe extends Instrumentation {
                 public void onActivityDestroyed(Activity a){}
             });
             require(context.getPackageName().equals("com.alexcantini.tvvault.preview"),"Independent preview UID/package; no real vault access");
+            if(coldPhase) { runColdPhase(context); results.putInt("checks_passed",checks);results.putString("result","PASS");return; }
             SharedPreferences prefs=context.getSharedPreferences("tvvault_pin",0);
             prefs.edit().clear().commit();
             PinStore pin=new PinStore(context);
@@ -139,6 +159,10 @@ public class UiProbe extends Instrumentation {
             require(context.getSharedPreferences("tvvault_disclosure",0).getBoolean("hide",false),"Accept remembers checkbox choice");
             Activity savedMain=activity;
             shot("home");
+            require(find(R.string.home_pin_unset).isShown(),"Home clearly reports PIN not configured");
+            click(R.string.exit);SystemClock.sleep(300);launch();
+            require(find(R.string.select_app).isShown(),"PIN-disabled app remains optional and accessible");
+            savedMain=activity;
             ui(()-> {
                 View root=activity.getWindow().getDecorView();
                 require(all(root).stream().noneMatch(v->v instanceof ScrollView),"Home contains no scrolling container");
@@ -200,6 +224,24 @@ public class UiProbe extends Instrumentation {
             SystemClock.sleep(300);waitForText(R.string.unlock);
             require(fields().size()==1,"Background return requires PIN again");
             shot("unlock");
+            ui(()-> {
+                android.widget.Button unlock=(android.widget.Button)find(R.string.unlock);
+                require(unlock.getTextColors().getDefaultColor()==android.graphics.Color.WHITE,"Unlock button text is white");
+                require(unlock.getBackground() instanceof android.graphics.drawable.StateListDrawable,"Unlock button has visible focus/pressed states");
+            });
+            enter(0,"1234");click(R.string.unlock);waitForText(R.string.select_app);
+            require(find(R.string.home_pin_active).isShown(),"Home clearly reports active PIN protection");
+            final Activity reused=activity;
+            ui(()->context.startActivity(new Intent(context,MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP)));
+            waitForText(R.string.unlock);require(activity==reused,"Launcher reuses same activity for new-intent test");
+            require(fields().size()==1,"New launcher intent relocks a reused activity");
+            enter(0,"1234");click(R.string.unlock);waitForText(R.string.select_app);
+            screenEvent(context,Intent.ACTION_SCREEN_OFF);
+            require(!((LockedActivity)activity).isVaultUnlocked(),"Screen-off invalidates unlocked access without waiting for onStop");
+            screenEvent(context,Intent.ACTION_SCREEN_ON);waitForText(R.string.unlock);
+            require(fields().size()==1,"Screen-on requests PIN while activity remains alive");
+            // Keep this synthetic PIN enabled so the separate cold-process phase can verify persistence.
+            shot("standby-unlock");
             results.putInt("checks_passed",checks);results.putString("result","PASS");
         } catch(Throwable error) {
             results.putString("result","FAIL");results.putString("error",error.toString());

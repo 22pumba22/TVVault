@@ -120,6 +120,7 @@ public final class PinSettingsActivity extends LockedActivity {
         busy = true; message.setText(R.string.saving);
         for (int i=0;i<root.getChildCount();i++) root.getChildAt(i).setEnabled(false);
         int request = generation;
+        boolean previouslyEnabled=new PinStore(this).isEnabled();
         new Thread(() -> {
             boolean success;
             try { operation.run(); success = true; } catch (Exception error) { success = false; }
@@ -127,7 +128,11 @@ public final class PinSettingsActivity extends LockedActivity {
             runOnUiThread(() -> {
                 if (!isVaultUnlocked() || isFinishing() || isDestroyed() || request != generation) return;
                 busy = false;
-                if (ok) { mode = Mode.OVERVIEW; render(); }
+                if (ok) {
+                    mode=Mode.OVERVIEW;render();
+                    if(!previouslyEnabled && new PinStore(this).isEnabled())
+                        android.widget.Toast.makeText(this,R.string.pin_enabled_notice,android.widget.Toast.LENGTH_LONG).show();
+                }
                 else {
                     for(int i=0;i<root.getChildCount();i++) root.getChildAt(i).setEnabled(true);
                     message.setText(R.string.pin_error);
@@ -140,23 +145,15 @@ public final class PinSettingsActivity extends LockedActivity {
         view.setPadding(0,dp(4),0,dp(8)); return view;
     }
     private Button button(int text) {
-        Button button = new Button(this); button.setText(text); button.setAllCaps(false); button.setTextSize(17);
-        button.setTextColor(Color.WHITE); button.setMinHeight(dp(46));
-        button.setPadding(dp(14),dp(4),dp(14),dp(4));
-        button.setBackground(background(false));
-        button.setOnFocusChangeListener((v,focus)->v.setBackground(background(focus)));
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(-1,dp(48)); params.topMargin=dp(6);
-        button.setLayoutParams(params); return button;
-    }
-    private GradientDrawable background(boolean focused) {
-        GradientDrawable shape = new GradientDrawable(); shape.setColor(focused ? Color.rgb(49,68,92) : Color.rgb(18,30,44));
-        shape.setCornerRadius(dp(8)); shape.setStroke(dp(focused?2:1),focused?Color.rgb(31,132,255):Color.rgb(60,83,108)); return shape;
+        Button button=TvTheme.button(this,text);
+        LinearLayout.LayoutParams params=new LinearLayout.LayoutParams(-1,dp(54));params.topMargin=dp(8);
+        button.setLayoutParams(params);return button;
     }
     private EditText field(int hint) {
         SecretInput input = new SecretInput(this,true); input.setHint(hint); input.setTextSize(19);
         input.setTextColor(Color.WHITE); input.setHintTextColor(Color.LTGRAY);
         input.setFilters(new InputFilter[]{new InputFilter.LengthFilter(12)});
-        input.setBackgroundTintList(ColorStateList.valueOf(Color.LTGRAY));
+        TvTheme.styleField(input);
         return input;
     }
     @Override public void onBackPressed() {

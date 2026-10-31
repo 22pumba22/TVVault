@@ -1,0 +1,1 @@
+Blocco PIN rinforzato per riapertura e standby, stato PIN evidente nella Home e pulsanti scuri ad alto contrasto con selezione blu.

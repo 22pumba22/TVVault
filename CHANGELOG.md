@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.17.2 (versionCode 20) — 2026-10-31
+- Relock on pause, new launcher intents and screen-off; screen-on returns to PIN gate.
+- PIN enabled/unset state clearly visible on Home; confirmation after enabling PIN.
+- Keep disclaimer acknowledgement independent from access protection.
+- High-contrast dark buttons, blue focus fill and bright focus borders across all screens.
+- Brighter secondary labels, input hints and platform confirmation dialogs.
+- No vault-format, PIN-verifier or credential changes.
+
 ## 0.17.1 (versionCode 19) — 2026-10-31
 - Single-page two-column Home and top-right Exit; author credit moved to disclosure.
 - Transparent icon corners; full-bleed 16:9 TV banner with TV Vault lettering.

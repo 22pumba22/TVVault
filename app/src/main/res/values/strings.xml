@@ -49,7 +49,6 @@
     <string name="open_local_vault">Open the local vault</string>
     <string name="autofill_error">TV Vault could not prepare autofill.</string>
     <string name="security_settings">Security and PIN</string>
-    <string name="security_subtitle">Manage access protection</string>
     <string name="locked">TV Vault locked</string>
     <string name="unlock_title">Unlock TV Vault</string>
     <string name="pin_hint">Numeric PIN (4–12 digits)</string>
@@ -91,4 +90,7 @@
     <string name="refuse">Decline</string>
     <string name="disclaimer_save_error">Could not save your choice. Please try again.</string>
     <string name="security_with_credit">%1$s\n\n%2$s</string>
+    <string name="home_pin_active">PIN active · Access protected</string>
+    <string name="home_pin_unset">PIN not set · Recommended</string>
+    <string name="pin_enabled_notice">PIN enabled. It will be requested when opening or returning to the app.</string>
 </resources>

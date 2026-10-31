@@ -20,3 +20,10 @@ checks layout and PIN authorization, and renders its own views to local PNGs.
 These images contain synthetic data; production FLAG_SECURE stays enabled.
 The separate test application should be removed after testing. Logs do not
 contain the real vault, actual PINs, or signing secrets.
+
+0.17.2: the normal phase leaves a synthetic PIN enabled. Force-stop ONLY the
+.preview package, then run with -e phase cold to check persistence and gate on
+fresh process startup while the disclaimer remains hidden.
+Screen-off/on tests directly invoke the activity's registered receiver with
+synthetic screen intents. They cover a live activity without onStop; the TV
+itself is not power-cycled. Full physical standby/reboot remains a manual test.

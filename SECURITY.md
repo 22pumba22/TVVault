@@ -16,7 +16,11 @@ TV Vault is an offline local credential manager, not an audited security product
   asterisks; stored values and multi-character pasted text remain masked.
 - PIN verifier/cooldown: private app preferences, not a cloud service.
 - PIN failures: persisted delays from the fifth failure; max 300 seconds.
-- Background: discard protected activity UI and require unlock on re-entry.
+- Pause/background, new launcher intent and screen-off: discard protected
+  activity UI and require unlock on re-entry. Screen-on/user-present handlers
+  restore the gate if the TV kept the activity alive while sleeping.
+- Disclaimer suppression only affects the informational notice. It never
+  disables an enabled PIN. A PIN remains optional until explicitly configured.
 - PIN not enabled: use is deliberately ungated; clearly disclosed in settings.
 - Credential selection/entry activities are not exported. Autofill service is
   protected by BIND_AUTOFILL_SERVICE. Its authentication Intent is explicit.
