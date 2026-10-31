@@ -543,7 +543,7 @@ public class MainActivity extends LockedActivity {
         e.setTextColor(Color.WHITE);
         e.setHintTextColor(Color.GRAY);
         e.setTextSize(18);
-        e.setSingleLine(true);
+        if (!secret) e.setSingleLine(true);
         e.setSaveEnabled(false);
         if (!secret) e.setInputType(inputType);
         if (secret) ((SecretInput)e).hideAll();

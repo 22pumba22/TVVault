@@ -144,7 +144,6 @@ public abstract class LockedActivity extends Activity {
         input.setHintTextColor(Color.LTGRAY);
         input.setFilters(new InputFilter[]{new InputFilter.LengthFilter(12)});
         input.setSaveEnabled(false);
-        input.setSingleLine(true);
         root.addView(input);
         TextView error = new TextView(this);
         error.setTextColor(Color.WHITE);
