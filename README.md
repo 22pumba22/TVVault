@@ -70,9 +70,10 @@ separately and requests secrets locally. Use a recent apksigner supporting
 and back up the key and password separately.
 Source repository: https://github.com/22pumba22/TVVault
 
-F-Droid preparation is in docs/FDROID.md. Fastlane metadata is under
-fastlane/metadata/android/en-US and it-IT. Real device screenshots are still
-required. Compilation and local tests do not imply F-Droid acceptance.
+F-Droid preparation is in docs/FDROID.md. Fastlane metadata and localized synthetic interface exports are under
+fastlane/metadata/android/en-US and it-IT. The images are rendered from the
+Android interface while retaining screen capture protection.
+Compilation and local tests do not imply F-Droid acceptance.
 
 ## License and attribution
 GPL-3.0-only; see LICENSE, NOTICE and SOURCES.md. The supplied original project
