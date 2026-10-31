@@ -1,0 +1,29 @@
+# TEMPLATE ONLY. Replace all @...@ fields after publishing and signing.
+Categories:
+  - Security
+License: GPL-3.0-only
+AuthorName: Alex Cantini
+SourceCode: '@SOURCE_REPOSITORY_URL@'
+IssueTracker: '@ISSUE_TRACKER_URL@'
+
+AutoName: TV Vault
+
+RepoType: git
+Repo: '@GIT_CLONE_URL@'
+
+Binaries: '@RELEASE_DOWNLOAD_BASE@/v%v/TVVault_v%v_release.apk'
+
+Builds:
+  - versionName: 0.17.0
+    versionCode: 18
+    commit: '@FULL_RELEASE_COMMIT@'
+    subdir: app
+    gradle:
+      - yes
+
+AllowedAPKSigningKeys: '@RELEASE_CERTIFICATE_SHA256@'
+
+AutoUpdateMode: Version
+UpdateCheckMode: Tags ^v[0-9]+(\.[0-9]+)*$
+CurrentVersion: 0.17.0
+CurrentVersionCode: 18

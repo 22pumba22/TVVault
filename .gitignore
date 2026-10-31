@@ -1,0 +1,16 @@
+.gradle/
+.idea/
+**/build/
+local.properties
+*.iml
+*.jks
+*.keystore
+*.apk
+*.aab
+*.idsig
+signing.properties
+credentials.properties
+.DS_Store
+tests/jvm/classes/
+tests/jvm/results.txt
+*.class

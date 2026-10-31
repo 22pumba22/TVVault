@@ -1,0 +1,1 @@
+PIN facoltativo, gestione sicura degli errori del vault, compilazione selettiva, interfaccia italiana e inglese e correzioni Autofill.

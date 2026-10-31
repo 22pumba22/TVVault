@@ -1,0 +1,15 @@
+TV Vault conserva username e password localmente sulla tua Android TV.
+
+Funzioni:
+• Archivio locale cifrato con AES-256-GCM e Android Keystore.
+• Integrazione Android Autofill per le app compatibili.
+• Credenziali associate a un’app o universali ed esclusione delle app.
+• PIN numerico facoltativo per app e Autofill, inizialmente disattivato.
+• Interfaccia italiana e inglese, navigabile con telecomando e D-pad.
+• Nessun permesso Internet, account, tracciamento o sincronizzazione cloud.
+
+Il PIN controlla l’accesso e non genera la chiave del vault. Senza PIN, chi può usare l’app può accedere alle credenziali. Un dispositivo compromesso può esporre le password. Non è stato eseguito un audit di sicurezza indipendente.
+
+La disponibilità di Autofill dipende da Android e dall’app destinataria. Le credenziali si inseriscono manualmente; non sono disponibili acquisizione automatica, importazione, esportazione o recupero. Cancellare i dati, disinstallare o perdere la chiave può causare la perdita definitiva del vault. Il PIN dimenticato non può essere recuperato.
+
+Progettata per Android TV. Richiede campi compatibili e l’attivazione del servizio Android Autofill. Versione minima Android: 9.

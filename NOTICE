@@ -1,0 +1,10 @@
+TV Vault
+Copyright (C) 2026 Alex Cantini
+SPDX-License-Identifier: GPL-3.0-only
+
+The original TV Vault SOURCES.md declares a Java port/reimplementation of
+Android Autofill concepts from Bitwarden mobile v2024.10.0.
+Bitwarden reference code: Copyright (C) Bitwarden Inc. and contributors.
+GPL version 3. See LICENSE and SOURCES.md for verified references and changes.
+TV Vault is an independent project and is not affiliated with Bitwarden.
+Original TV Vault icon/banner retained from the supplied project.

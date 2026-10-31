@@ -1,0 +1,15 @@
+TV Vault stores username and password credentials locally on your Android TV.
+
+Features:
+• Encrypted local vault using AES-256-GCM and Android Keystore.
+• Android Autofill integration for compatible apps.
+• App-specific or universal credentials, and app exclusions.
+• Optional numeric PIN for app access and Autofill; disabled by default.
+• English and Italian interface with TV remote/D-pad navigation.
+• No Internet permission, accounts, tracking or cloud sync.
+
+The PIN controls access; it does not derive the vault encryption key. Without a PIN, anyone able to use the app can access saved credentials. A compromised device may expose credentials. No independent security audit has been performed.
+
+Autofill availability depends on Android and the target app. Credentials are entered manually; automatic capture, import, export and recovery are not provided. Clearing app data, uninstalling, or losing the device key can permanently lose the vault. A forgotten PIN cannot be recovered.
+
+Designed for Android TV. Compatible text fields and an enabled Android Autofill service are required. Minimum Android version: 9.
