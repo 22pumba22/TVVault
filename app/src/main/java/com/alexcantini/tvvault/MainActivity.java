@@ -256,9 +256,11 @@ public class MainActivity extends LockedActivity {
         row.addView(chevron, new LinearLayout.LayoutParams(dp(42), dp(54)));
 
         row.setOnFocusChangeListener((v, hasFocus) -> applyCardFocus(v, hasFocus));
-        row.setOnClickListener(v -> action.run());
+        row.setOnClickListener(v -> { if (isVaultUnlocked()) action.run(); else requestUnlock(); });
         return row;
     }
+
+    @Override protected boolean showNavigationHome() { showHome(); return true; }
 
     private void showHome() {
         currentScreen = Screen.HOME;
@@ -287,6 +289,8 @@ public class MainActivity extends LockedActivity {
         LinearLayout excluded = homeCard("OFF",Color.rgb(109,55,177),getString(R.string.excluded_apps),getString(R.string.excluded_apps_hint),this::showExclusions);
         LinearLayout security = homeCard("PIN",Color.rgb(75,94,116),getString(R.string.security_settings),getString(new PinStore(this).isEnabled()?R.string.home_pin_active:R.string.home_pin_unset),
                 ()->startActivity(new Intent(this,PinSettingsActivity.class)));
+        // This activity has its own entry gate, including when the Home is locked.
+        security.setOnClickListener(v -> startActivity(new Intent(this,PinSettingsActivity.class)));
         LinearLayout top = new LinearLayout(this), bottom = new LinearLayout(this);
         for(LinearLayout line : new LinearLayout[]{top,bottom}) line.setBaselineAligned(false);
         LinearLayout.LayoutParams left = new LinearLayout.LayoutParams(0,-1,1f); left.rightMargin=dp(10);
@@ -370,6 +374,7 @@ public class MainActivity extends LockedActivity {
 
         row.setOnFocusChangeListener((v, hasFocus) -> applyCardFocus(v, hasFocus));
         row.setOnClickListener(v -> {
+            if (!isVaultUnlocked()) { requestUnlock(); return; }
             AutofillManager manager = getSystemService(AutofillManager.class);
             boolean enabled =
                     manager != null && manager.hasEnabledAutofillServices();

@@ -17,7 +17,7 @@ import android.widget.EditText;
 
 /** Reveals one newly typed character for 1500 ms; stored values and pasted text stay masked. */
 public final class SecretInput extends EditText {
-    private static final long REVEAL_MS = 1500;
+    private static final long REVEAL_MS = 1000;
     private static final class MaskLayoutChange implements UpdateLayout { }
     private final MaskLayoutChange layoutChange = new MaskLayoutChange();
     private int visible = -1;

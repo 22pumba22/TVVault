@@ -69,6 +69,12 @@ public class Regression {
   options.set("5678");check(!options.isAutofillPinRequired(),"Changing vault PIN preserves Autofill choice");
   check(options.setAutofillPinRequired(true,"5678"),"Current PIN can restore Autofill protection");
   check(options.isAutofillPinRequired(),"Restored Autofill protection persists");
+  options.setAutofillPinRequiredForAuthorizedVisit(false);
+  check(options.isEnabled()&&!optionReloaded.isAutofillPinRequired(),"Authorized visit storage preserves vault PIN and persists Autofill choice");
+  optionContext.stores.get("tvvault_pin").failWrites=true;
+  rejects(()->options.setAutofillPinRequiredForAuthorizedVisit(true),"Authorized settings write failure is surfaced");
+  check(!options.isAutofillPinRequired(),"Failed option write preserves previous choice");
+  optionContext.stores.get("tvvault_pin").failWrites=false;
   options.disable();options.set("9012");check(options.isAutofillPinRequired(),"New PIN enrollment returns to protected Autofill default");
   Security.insertProviderAt(new FakeProvider(),1);
   Context vaultContext=new Context();LegacyCryptoStore legacy=new LegacyCryptoStore(vaultContext);

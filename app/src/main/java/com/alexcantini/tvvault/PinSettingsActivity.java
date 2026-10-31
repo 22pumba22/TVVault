@@ -15,10 +15,9 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 public final class PinSettingsActivity extends LockedActivity {
-    private enum Mode { OVERVIEW, CHECK_CHANGE, CHECK_DISABLE, CHECK_AUTOFILL, NEW_PIN }
+    private enum Mode { OVERVIEW, NEW_PIN }
     private Mode mode = Mode.OVERVIEW;
     private boolean busy;
-    private boolean requestedAutofillPin;
     private int generation;
     private static final int BG = Color.rgb(8,15,24);
     @Override protected void onUnlocked() { mode = Mode.OVERVIEW; generation++; busy = false; render(); }
@@ -44,26 +43,15 @@ public final class PinSettingsActivity extends LockedActivity {
             autofillPin.setChecked(pin.isAutofillPinRequired());
             autofillPin.setOnClickListener(v -> {
                 if (busy || !isVaultUnlocked()) { autofillPin.setChecked(pin.isAutofillPinRequired()); return; }
-                requestedAutofillPin = autofillPin.isChecked();
+                boolean required = autofillPin.isChecked();
                 autofillPin.setChecked(pin.isAutofillPinRequired());
-                mode = Mode.CHECK_AUTOFILL; render();
+                mutate(() -> pin.setAutofillPinRequiredForAuthorizedVisit(required));
             });
             root.addView(autofillPin);
         }
         message = label("",16);
         View first;
-        if (mode == Mode.CHECK_CHANGE || mode == Mode.CHECK_DISABLE || mode == Mode.CHECK_AUTOFILL) {
-            if (mode == Mode.CHECK_AUTOFILL)
-                root.addView(label(getString(requestedAutofillPin ? R.string.enable_autofill_pin_info : R.string.disable_autofill_pin_info),18));
-            root.addView(label(getString(R.string.current_pin_prompt),18));
-            EditText current = field(R.string.current_pin);
-            root.addView(current);
-            root.addView(message);
-            Button verify = button(R.string.continue_action);
-            verify.setOnClickListener(v -> verifyCurrent(current, verify));
-            root.addView(verify);
-            first = current;
-        } else if (!enabled || mode == Mode.NEW_PIN) {
+        if (!enabled || mode == Mode.NEW_PIN) {
             EditText next = field(R.string.new_pin), confirm = field(R.string.confirm_pin);
             root.addView(next); root.addView(confirm); root.addView(message);
             Button save = button(enabled ? R.string.save_pin : R.string.enable_pin);
@@ -73,17 +61,17 @@ public final class PinSettingsActivity extends LockedActivity {
                 if (!PinStore.valid(value)) { message.setText(R.string.pin_format); return; }
                 if (!value.equals(confirm.getText().toString())) { message.setText(R.string.pin_mismatch); return; }
                 next.setText(""); confirm.setText("");
-                // NEW_PIN is reachable for an existing PIN only after current-PIN verification.
+                // The entry gate authorizes this visit; no PIN is retained in memory.
                 mutate(() -> pin.set(value));
             });
             root.addView(save);
             first = next;
         } else {
             Button change = button(R.string.change_pin);
-            change.setOnClickListener(v -> { if (!busy) { mode = Mode.CHECK_CHANGE; render(); } });
+            change.setOnClickListener(v -> { if (!busy && isVaultUnlocked()) { mode = Mode.NEW_PIN; render(); } });
             root.addView(change);
             Button disable = button(R.string.disable_pin);
-            disable.setOnClickListener(v -> { if (!busy) { mode = Mode.CHECK_DISABLE; render(); } });
+            disable.setOnClickListener(v -> { if (!busy && isVaultUnlocked()) mutate(pin::disable); });
             root.addView(disable);
             root.addView(message);
             first = change;
@@ -93,8 +81,8 @@ public final class PinSettingsActivity extends LockedActivity {
                 .setMessage(getString(R.string.security_with_credit, getString(R.string.security_details), getString(R.string.credit)))
                 .setPositiveButton(android.R.string.ok, null)));
         root.addView(info);
-        Button back = button(R.string.back);
-        back.setOnClickListener(v -> onBackPressed());
+        Button back = button(R.string.home);
+        back.setOnClickListener(v -> { if (!busy) navigateHome(); });
         root.addView(back);
         ScrollView scroll = new ScrollView(this);
         scroll.setFillViewport(true);
@@ -102,35 +90,6 @@ public final class PinSettingsActivity extends LockedActivity {
         scroll.addView(root, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         setContentView(scroll);
         first.requestFocus();
-    }
-    private void verifyCurrent(EditText input, Button button) {
-        if (busy || !isVaultUnlocked()) return;
-        String value = input.getText().toString(); input.setText("");
-        if (!PinStore.valid(value)) { message.setText(R.string.pin_format); return; }
-        busy = true; button.setEnabled(false);
-        PinStore pin = new PinStore(this);
-        message.setText(pin.isLegacy() ? R.string.upgrading_pin : R.string.checking_pin);
-        int request = generation;
-        Mode requestedMode = mode;
-        boolean desiredAutofillPin = requestedAutofillPin;
-        new Thread(() -> {
-            boolean accepted = false, fault = false;
-            try { accepted = requestedMode == Mode.CHECK_AUTOFILL ? pin.setAutofillPinRequired(desiredAutofillPin,value) : pin.verify(value); } catch (Exception error) { fault = true; }
-            final boolean ok = accepted, failed = fault;
-            runOnUiThread(() -> {
-                if (!isVaultUnlocked() || isFinishing() || isDestroyed() || request != generation) return;
-                busy = false; button.setEnabled(true);
-                if (failed) message.setText(R.string.pin_error);
-                else if (!ok) {
-                    long wait = pin.remainingSeconds();
-                    message.setText(wait > 0 ? getString(R.string.pin_wait, wait) : getString(R.string.pin_wrong));
-                } else if (requestedMode == Mode.CHECK_DISABLE) {
-                    mutate(pin::disable);
-                } else if (requestedMode == Mode.CHECK_AUTOFILL) {
-                    mode=Mode.OVERVIEW;render();
-                } else { mode = Mode.NEW_PIN; render(); }
-            });
-        }, "TVVault-check-current-PIN").start();
     }
     private interface Operation { void run() throws Exception; }
     private void mutate(Operation operation) {

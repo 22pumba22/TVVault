@@ -54,6 +54,34 @@ public abstract class LockedActivity extends Activity {
 
     protected boolean requiresPin() { return new PinStore(this).isEnabled(); }
     protected abstract void onUnlocked();
+    protected boolean showNavigationHome() { return false; }
+    protected final void requestUnlock() { if (requiresPin()) showGate(); else grantAccess(); }
+    private static final String NAV_HOME = "com.alexcantini.tvvault.NAV_HOME";
+    /** Navigation never grants access and cancels any pending PIN verification. */
+    protected final void navigateHome() {
+        invalidateAccess();
+        if (showNavigationHome()) {
+            gateVisible = true;
+            if (!requiresPin()) grantAccess();
+            return;
+        }
+        startActivity(new Intent(this, MainActivity.class)
+                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                .putExtra(NAV_HOME, true));
+        setResult(RESULT_CANCELED);
+        finish();
+    }
+    private boolean consumeHomeNavigation() {
+        if (!getIntent().getBooleanExtra(NAV_HOME, false)) return false;
+        getIntent().removeExtra(NAV_HOME);
+        invalidateAccess();
+        if (showNavigationHome()) {
+            gateVisible = true;
+            if (!requiresPin()) grantAccess();
+            return true;
+        }
+        return false;
+    }
     protected void onVaultLocked() { }
     protected final boolean isVaultUnlocked() { return unlocked && foreground && !disclosurePending; }
 
@@ -79,6 +107,7 @@ public abstract class LockedActivity extends Activity {
 
     private void continueEntry() {
         disclosurePending = false;
+        if (consumeHomeNavigation()) return;
         boolean enabled = requiresPin();
         if (enabled && !pinAtUnlock) { unlocked = false; onVaultLocked(); }
         if (!unlocked) {
@@ -121,6 +150,8 @@ public abstract class LockedActivity extends Activity {
     }
     @Override protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+        setIntent(intent);
+        if (foreground && !disclosurePending && consumeHomeNavigation()) return;
         if(requiresPin()) {
             invalidateAccess();
             if(foreground && !disclosurePending)showGate();
@@ -213,8 +244,8 @@ public abstract class LockedActivity extends Activity {
                 .setTitle(R.string.forgot_pin).setMessage(R.string.forgot_pin_info)
                 .setPositiveButton(android.R.string.ok, null)));
         root.addView(help);
-        Button cancel = TvTheme.button(this,R.string.cancel);
-        cancel.setOnClickListener(v -> finish());
+        Button cancel = TvTheme.button(this,R.string.home);
+        cancel.setOnClickListener(v -> navigateHome());
         root.addView(cancel);
         unlock.setOnClickListener(v -> {
             if (checking) return;

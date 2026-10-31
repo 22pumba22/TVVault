@@ -96,4 +96,5 @@
     <string name="require_autofill_pin">Require PIN for autofill</string>
     <string name="enable_autofill_pin_info">Autofill will require your PIN. Opening the vault remains protected.</string>
     <string name="disable_autofill_pin_info">Autofill will be allowed to use saved credentials without a PIN. Opening the vault will still require it.</string>
+    <string name="home">Home</string>
 </resources>

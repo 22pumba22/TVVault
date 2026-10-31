@@ -37,8 +37,8 @@ screen captures by design. Do not disable it in a public release for screenshots
 
 0.17.1 additions: first-open decline preserves data; Accept plus checkbox
 suppresses future notices; active PIN settings hide new/confirm fields;
-wrong current PIN cannot authorize change/disable; migration keeps the old PIN;
-single typed character becomes * after 1500 ms, stored values start masked;
+wrong entry PIN cannot authorize a settings visit; migration keeps the old PIN;
+single typed character becomes * after 1000 ms, stored values start masked;
 Home fits in one page with Exit at top right; PIN page fills background.
 
 0.17.2: verify Home reports whether the PIN is actually configured. Enabling
@@ -48,10 +48,12 @@ open, Home/background return, TV standby and a full device reboot. The automated
 isolated tests cover process restart, launcher re-entry, background and injected
 screen events; they do not turn off or reboot the user's television.
 
-0.17.3: test checkbox checked/unchecked, requiring a current PIN before changing;
+0.17.4: test checkbox checked/unchecked after the single settings entry PIN;
 wrong PIN must leave the choice unchanged. Verify MainActivity always keeps its
 PIN gate while Autofill off bypasses only the Autofill gate and retains selection.
 Check option persistence after restart. Type ONE character and wait without any
-other key, focus change or navigation: it must become * after 1500 ms. Compare
+other key, focus change or navigation: it must become * after 1000 ms. Compare
 real rendered pixels, not just TransformationMethod.toString(). Test explicit
 paste actions remain masked, including a one-character clipboard paste.
+
+0.17.4: UiProbe174 covers Home from both unlock/settings pages without unlocking the vault, one PIN check per visit, changes without repeat checks, leaving/background invalidation, no-PIN navigation and automatic hardware-rendered masking after 1000 ms. Run only against com.alexcantini.tvvault.preview with synthetic data.

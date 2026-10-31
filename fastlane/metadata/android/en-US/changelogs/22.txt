@@ -1,0 +1,1 @@
+Home navigation without bypassing PIN protection. One PIN check per security settings visit. Automatic character masking after 1 second.

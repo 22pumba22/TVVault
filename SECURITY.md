@@ -9,10 +9,10 @@ TV Vault is an offline local credential manager, not an audited security product
   Legacy PBKDF2-HMAC-SHA256 / 210,000 iterations remains solely for existing PIN
   verification and one-time migration on successful unlock. Unknown verifier
   formats or missing PIN keys fail closed; no key replacement on verification.
-- Changing/disabling an enabled PIN requires a fresh current-PIN check.
-  New-PIN entry is revealed only after successful verification; backgrounding
-  invalidates the in-progress settings authorization.
-- Secret inputs reveal only a newly typed single character for 1500 ms, then show
+- Security and PIN requires the active PIN once per foreground visit. Changing,
+  disabling and configuring Autofill use that visit authorization without caching
+  the PIN. Leaving the page or backgrounding ends authorization.
+- Secret inputs reveal only a newly typed single character for 1000 ms, then show
   asterisks; stored values and multi-character pasted text remain masked.
 - PIN verifier/cooldown: private app preferences, not a cloud service.
 - PIN failures: persisted delays from the fifth failure; max 300 seconds.
@@ -51,10 +51,16 @@ PINs, vault files or signing keys in public issues.
 
 ## Autofill choice (0.17.3)
 An enabled vault PIN protects application entry. The separate Autofill PIN
-requirement defaults to true. Changing it requires fresh verification of the
-current PIN; wrong PINs retain the setting and count toward the retry delay.
+requirement defaults to true. Changing it requires an authorized foreground visit to Security and PIN.
+The entry PIN is checked once per visit; wrong PINs count toward the retry delay.
 When unchecked, the Autofill selection activity may decrypt and return chosen
 credentials without asking for the PIN. It does not grant access to MainActivity
 or PIN settings. Package-selection warnings and credential selection remain.
 Changing the vault PIN preserves this option; a new PIN enrollment after disabling
 protection defaults to requiring the Autofill PIN again.
+
+## Navigation and settings (0.17.4)
+Home returns to the initial page without granting access. A locked Home contains
+no decrypted credentials; protected actions require unlock. Security and PIN has
+its own entry gate, once per visit. Leaving or backgrounding invalidates access.
+Secret input reveals the last typed character for 1000 ms, then masks it automatically.

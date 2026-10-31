@@ -55,9 +55,16 @@ public final class PinStore {
         synchronized (PinStore.class) {
             if (!isEnabled()) throw new IllegalStateException("Configure a PIN first");
             if (!verify(currentPin)) return false;
+            setAutofillPinRequiredForAuthorizedVisit(required);
+            return true;
+        }
+    }
+    /** Internal settings operation. Caller must hold the foreground visit's entry authorization. */
+    void setAutofillPinRequiredForAuthorizedVisit(boolean required) {
+        synchronized (PinStore.class) {
+            if (!isEnabled()) throw new IllegalStateException("Configure a PIN first");
             if (!prefs.edit().putBoolean("require_autofill_pin", required).commit())
                 throw new IllegalStateException("Cannot save Autofill PIN choice");
-            return true;
         }
     }
     public static boolean valid(String pin) { return pin != null && pin.matches("[0-9]{4,12}"); }

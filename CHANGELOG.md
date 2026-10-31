@@ -1,3 +1,9 @@
+# 0.17.4
+- Home replaces Back/Cancel on security settings and unlock screens in both languages.
+- Security settings ask for the PIN once per visit, invalidated on exit/background.
+- PIN and Autofill changes reuse the authorized visit; Home never unlocks credentials.
+- Typed secret characters automatically mask after 1000 ms.
+
 # Changelog
 
 ## 0.17.3 (versionCode 21) — 2026-10-31

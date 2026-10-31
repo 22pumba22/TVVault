@@ -1,0 +1,1 @@
+Home senza aggirare la protezione PIN. Una richiesta del PIN per ogni visita a Sicurezza e PIN. Mascheramento automatico dopo 1 secondo.
