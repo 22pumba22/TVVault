@@ -1,4 +1,4 @@
-# TV Vault 0.17.4
+# TV Vault 0.17.5
 
 Offline password manager for Android TV, created by Alex Cantini.
 Android 9 (API 28) or later. English UI by default, Italian on Italian systems.
@@ -86,3 +86,12 @@ Home returns to the initial page without granting access. A locked Home contains
 no decrypted credentials; protected actions require unlock. Security and PIN has
 its own entry gate, once per visit. Leaving or backgrounding invalidates access.
 Secret input reveals the last typed character for 1000 ms, then masks it automatically.
+
+## Navigation and Autofill settings (0.17.5)
+The initial application PIN gate has Exit instead of Home. Internal navigation
+buttons use Home in both languages, including the vault, editor, app picker and
+exclusions. Invalid PIN format and an incorrect PIN have separate messages.
+An authenticated round trip to the explicitly resolved system Autofill settings
+does not ask for the PIN again. This exception expires after two minutes and is
+revoked by screen-off, a new launcher intent or process death. Other background
+transitions retain normal locking. Secret UI is cleared while settings are open.

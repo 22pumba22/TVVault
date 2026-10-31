@@ -1,3 +1,9 @@
+# 0.17.5
+- Exit on the initial app unlock screen; Home on internal navigation buttons in both languages.
+- Distinct messages for an incorrect PIN and an invalid PIN format.
+- Preserve existing unlock only for the bounded round trip to Android Autofill settings.
+- Keep one-second masking and one PIN check per security settings visit.
+
 # 0.17.4
 - Home replaces Back/Cancel on security settings and unlock screens in both languages.
 - Security settings ask for the PIN once per visit, invalidated on exit/background.

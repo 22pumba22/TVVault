@@ -57,3 +57,12 @@ real rendered pixels, not just TransformationMethod.toString(). Test explicit
 paste actions remain masked, including a one-character clipboard paste.
 
 0.17.4: UiProbe174 covers Home from both unlock/settings pages without unlocking the vault, one PIN check per visit, changes without repeat checks, leaving/background invalidation, no-PIN navigation and automatic hardware-rendered masking after 1000 ms. Run only against com.alexcantini.tvvault.preview with synthetic data.
+
+0.17.5: UiProbe175 verifies Exit closes the initial PIN gate, Home is absent there,
+Home navigation from vault/editor/picker/exclusions, localized wrong-PIN and
+invalid-format messages, and the authorized Android Autofill settings round trip.
+Only cancel the actual system picker; never change the user's real Autofill
+provider during automated tests. Check that the provider is unchanged afterward.
+Inject screen-off into the preview receiver and expire the in-memory deadline to
+verify those events revoke the exception; ordinary background must still lock.
+Also check per-visit settings access, one-second rendered masking and process restart.

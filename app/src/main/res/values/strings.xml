@@ -56,10 +56,10 @@
     <string name="forgot_pin">Forgot PIN?</string>
     <string name="forgot_pin_info">The PIN cannot be recovered. If it is forgotten, clearing app data or uninstalling removes both the PIN and all saved credentials. There is no cloud backup. Do this only if you accept losing the vault.</string>
     <string name="pin_wait">Too many attempts. Try again in %1$d seconds.</string>
-    <string name="pin_format">Use 4–12 digits (0–9).</string>
+    <string name="pin_format">Invalid PIN format</string>
     <string name="checking_pin">Checking PIN…</string>
     <string name="pin_error">PIN protection could not be read or saved. Access remains protected.</string>
-    <string name="pin_wrong">Incorrect PIN.</string>
+    <string name="pin_wrong">Incorrect PIN</string>
     <string name="pin_on">PIN enabled</string>
     <string name="pin_off">PIN disabled</string>
     <string name="pin_description">We recommend setting a PIN to protect access to your passwords. Choose one you can remember: it cannot be recovered.</string>

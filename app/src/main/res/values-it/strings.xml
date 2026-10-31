@@ -56,10 +56,10 @@
     <string name="forgot_pin">PIN dimenticato?</string>
     <string name="forgot_pin_info">Il PIN non può essere recuperato. Se lo dimentichi, cancellare i dati dell’app o disinstallarla elimina sia il PIN sia tutte le credenziali salvate. Non esiste un backup cloud. Procedi solo se accetti di perdere il vault.</string>
     <string name="pin_wait">Troppi tentativi. Riprova tra %1$d secondi.</string>
-    <string name="pin_format">Usa da 4 a 12 cifre (0–9).</string>
+    <string name="pin_format">Formato Pin non valido</string>
     <string name="checking_pin">Verifica del PIN…</string>
     <string name="pin_error">Impossibile leggere o salvare la protezione PIN. L’accesso resta protetto.</string>
-    <string name="pin_wrong">PIN errato.</string>
+    <string name="pin_wrong">Pin errato</string>
     <string name="pin_on">PIN attivo</string>
     <string name="pin_off">PIN disattivato</string>
     <string name="pin_description">Ti consigliamo di impostare un PIN per proteggere l’accesso alle password. Scegline uno che ricordi: non può essere recuperato.</string>

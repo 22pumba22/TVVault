@@ -260,6 +260,7 @@ public class MainActivity extends LockedActivity {
         return row;
     }
 
+    @Override protected boolean exitFromGate() { return true; }
     @Override protected boolean showNavigationHome() { showHome(); return true; }
 
     private void showHome() {
@@ -395,7 +396,7 @@ public class MainActivity extends LockedActivity {
                         new Intent(Settings.ACTION_REQUEST_SET_AUTOFILL_SERVICE);
                 intent.setData(Uri.parse("package:" + getPackageName()));
                 try {
-                    startActivity(intent);
+                    openAutofillSettings(intent);
                 } catch (Exception e) {
                     Toast.makeText(
                             this,
@@ -450,7 +451,7 @@ public class MainActivity extends LockedActivity {
                 1f
         ));
 
-        Button back = tvButton(getString(R.string.back));
+        Button back = tvButton(getString(R.string.home));
         back.setOnClickListener(v -> showHome());
         root.addView(back);
         focusables.add(back);
@@ -586,7 +587,7 @@ public class MainActivity extends LockedActivity {
 
         Button save = tvButton(getString(R.string.save));
         Button delete = tvButton(getString(R.string.delete));
-        Button cancel = tvButton(getString(R.string.cancel));
+        Button cancel = tvButton(getString(R.string.home));
 
         root.addView(save, marginBottom(dp(6)));
         root.addView(delete, marginBottom(dp(6)));
@@ -645,7 +646,7 @@ public class MainActivity extends LockedActivity {
             }
         });
 
-        cancel.setOnClickListener(v -> showVault());
+        cancel.setOnClickListener(v -> showHome());
 
         setContentView(root);
         label.requestFocus();
@@ -772,8 +773,8 @@ public class MainActivity extends LockedActivity {
                 1f
         ));
 
-        Button cancel = tvButton(getString(R.string.cancel_back));
-        cancel.setOnClickListener(v -> showEditor());
+        Button cancel = tvButton(getString(R.string.home));
+        cancel.setOnClickListener(v -> showHome());
         root.addView(cancel);
         focusables.add(cancel);
 
@@ -837,7 +838,7 @@ public class MainActivity extends LockedActivity {
                 1f
         ));
 
-        Button back = tvButton(getString(R.string.back));
+        Button back = tvButton(getString(R.string.home));
         back.setOnClickListener(v -> showHome());
         root.addView(back);
         focusables.add(back);

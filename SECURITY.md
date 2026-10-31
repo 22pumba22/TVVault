@@ -64,3 +64,13 @@ Home returns to the initial page without granting access. A locked Home contains
 no decrypted credentials; protected actions require unlock. Security and PIN has
 its own entry gate, once per visit. Leaving or backgrounding invalidates access.
 Secret input reveals the last typed character for 1000 ms, then masks it automatically.
+
+## System Autofill settings return (0.17.5)
+Only an already authenticated activity can launch this exception. The Autofill
+settings Intent is resolved to an explicit component in a system application.
+The in-memory pending request is consumed by its matching Activity result;
+result data is ignored. Normal or canceled return can restore the existing
+unlock for at most two minutes. Vault contents/UI are cleared while away and
+reloaded on authorized return. Screen-off, launcher intents and process death
+revoke the exception; no permission or PIN preference is stored for this flow.
+The initial MainActivity gate offers Exit, and cannot reveal Home without PIN.

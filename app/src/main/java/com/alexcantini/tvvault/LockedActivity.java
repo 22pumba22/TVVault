@@ -29,6 +29,11 @@ public abstract class LockedActivity extends Activity {
     private boolean disclosurePending;
     private boolean gateVisible;
     private boolean receiverRegistered;
+    private static final int AUTOFILL_SETTINGS_REQUEST = 7401;
+    private static final long SETTINGS_RETURN_WINDOW_MS = 120000;
+    private boolean autofillSettingsPending;
+    private boolean refreshAfterSettings;
+    private long settingsDeadline;
     private final BroadcastReceiver screenReceiver = new BroadcastReceiver() {
         @Override public void onReceive(Context context,Intent intent) {
             if (!requiresPin()) return;
@@ -54,6 +59,31 @@ public abstract class LockedActivity extends Activity {
 
     protected boolean requiresPin() { return new PinStore(this).isEnabled(); }
     protected abstract void onUnlocked();
+    protected boolean exitFromGate() { return false; }
+    /** Narrow exception for an authenticated visit to Android's Autofill settings. */
+    protected final void openAutofillSettings(android.content.Intent intent) {
+        if (!isVaultUnlocked()) { requestUnlock(); return; }
+        android.content.pm.ResolveInfo target = getPackageManager().resolveActivity(intent, 0);
+        if (target == null || target.activityInfo == null ||
+                (target.activityInfo.applicationInfo.flags & android.content.pm.ApplicationInfo.FLAG_SYSTEM) == 0)
+            throw new android.content.ActivityNotFoundException("System Autofill settings unavailable");
+        intent.setComponent(new android.content.ComponentName(target.activityInfo.packageName,target.activityInfo.name));
+        autofillSettingsPending = true;
+        settingsDeadline = android.os.SystemClock.elapsedRealtime() + SETTINGS_RETURN_WINDOW_MS;
+        try { startActivityForResult(intent, AUTOFILL_SETTINGS_REQUEST); }
+        catch (RuntimeException failure) { autofillSettingsPending = false; throw failure; }
+    }
+    private boolean settingsReturnAllowed() {
+        return autofillSettingsPending && unlocked && android.os.SystemClock.elapsedRealtime() < settingsDeadline;
+    }
+    @Override protected void onActivityResult(int request, int result, Intent data) {
+        super.onActivityResult(request, result, data);
+        if (request != AUTOFILL_SETTINGS_REQUEST || !autofillSettingsPending) return;
+        boolean allowed = settingsReturnAllowed();
+        autofillSettingsPending = false;
+        if (allowed) refreshAfterSettings = true;
+        else invalidateAccess();
+    }
     protected boolean showNavigationHome() { return false; }
     protected final void requestUnlock() { if (requiresPin()) showGate(); else grantAccess(); }
     private static final String NAV_HOME = "com.alexcantini.tvvault.NAV_HOME";
@@ -98,6 +128,8 @@ public abstract class LockedActivity extends Activity {
         super.onStart();
         foreground = true;
         foregroundActivities++;
+        if (settingsReturnAllowed()) return;
+        if (autofillSettingsPending) invalidateAccess();
         if (!disclosureAccepted && !getSharedPreferences("tvvault_disclosure", MODE_PRIVATE).getBoolean("hide", false)) {
             showDisclosure();
             return;
@@ -125,6 +157,8 @@ public abstract class LockedActivity extends Activity {
 
     /** Lock before a resumed activity can be reused by a TV launcher or standby. */
     private void invalidateAccess() {
+        autofillSettingsPending = false;
+        refreshAfterSettings = false;
         generation++;
         checking=false;
         gateVisible=false;
@@ -141,11 +175,21 @@ public abstract class LockedActivity extends Activity {
     @Override protected void onPause() {
         // Do not discard an idle PIN input when a TV keyboard briefly takes focus.
         // A pending verification must never unlock an activity after it has paused.
-        if(requiresPin() && (unlocked || checking)) invalidateAccess();
+        if (settingsReturnAllowed()) {
+            // Hide and clear secret UI while Android settings are in front.
+            onVaultLocked();
+            TextView hidden = new TextView(this); hidden.setBackgroundColor(TvTheme.BG);
+            setContentView(hidden);
+        } else if(requiresPin() && (unlocked || checking)) invalidateAccess();
         super.onPause();
     }
     @Override protected void onResume() {
         super.onResume();
+        if (refreshAfterSettings) {
+            refreshAfterSettings = false;
+            if (unlocked && android.os.SystemClock.elapsedRealtime() < settingsDeadline) onUnlocked();
+            else invalidateAccess();
+        }
         if(foreground && !disclosurePending && !unlocked && !gateVisible && requiresPin())showGate();
     }
     @Override protected void onNewIntent(Intent intent) {
@@ -162,7 +206,7 @@ public abstract class LockedActivity extends Activity {
         foreground=false;
         foregroundActivities=Math.max(0,foregroundActivities-1);
         if(foregroundActivities==0)disclosureAccepted=false;
-        if(requiresPin())invalidateAccess();
+        if(requiresPin() && !settingsReturnAllowed())invalidateAccess();
         else {
             generation++;checking=false;
             for(AlertDialog dialog:new java.util.ArrayList<>(dialogs))dialog.dismiss();
@@ -244,8 +288,11 @@ public abstract class LockedActivity extends Activity {
                 .setTitle(R.string.forgot_pin).setMessage(R.string.forgot_pin_info)
                 .setPositiveButton(android.R.string.ok, null)));
         root.addView(help);
-        Button cancel = TvTheme.button(this,R.string.home);
-        cancel.setOnClickListener(v -> navigateHome());
+        Button cancel = TvTheme.button(this,exitFromGate() ? R.string.exit : R.string.home);
+        cancel.setOnClickListener(v -> {
+            if (exitFromGate()) { invalidateAccess(); finish(); }
+            else navigateHome();
+        });
         root.addView(cancel);
         unlock.setOnClickListener(v -> {
             if (checking) return;

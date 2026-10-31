@@ -1,0 +1,1 @@
+Exit on initial unlock. Home on internal pages in both languages. Clear PIN error messages. No repeated PIN when returning directly from Android Autofill settings.
