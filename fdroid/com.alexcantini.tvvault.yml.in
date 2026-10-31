@@ -14,8 +14,8 @@ Repo: '@GIT_CLONE_URL@'
 Binaries: '@RELEASE_DOWNLOAD_BASE@/v%v/TVVault_v%v_release.apk'
 
 Builds:
-  - versionName: 0.17.2
-    versionCode: 20
+  - versionName: 0.17.3
+    versionCode: 21
     commit: '@FULL_RELEASE_COMMIT@'
     subdir: app
     gradle:
@@ -25,5 +25,5 @@ AllowedAPKSigningKeys: '@RELEASE_CERTIFICATE_SHA256@'
 
 AutoUpdateMode: Version
 UpdateCheckMode: Tags ^v[0-9]+(\.[0-9]+)*$
-CurrentVersion: 0.17.2
-CurrentVersionCode: 20
+CurrentVersion: 0.17.3
+CurrentVersionCode: 21

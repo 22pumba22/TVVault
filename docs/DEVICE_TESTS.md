@@ -38,7 +38,7 @@ screen captures by design. Do not disable it in a public release for screenshots
 0.17.1 additions: first-open decline preserves data; Accept plus checkbox
 suppresses future notices; active PIN settings hide new/confirm fields;
 wrong current PIN cannot authorize change/disable; migration keeps the old PIN;
-single typed character becomes * after 650 ms, stored values start masked;
+single typed character becomes * after 1500 ms, stored values start masked;
 Home fits in one page with Exit at top right; PIN page fills background.
 
 0.17.2: verify Home reports whether the PIN is actually configured. Enabling
@@ -47,3 +47,11 @@ notice must never disable PIN protection. With PIN active test repeated launcher
 open, Home/background return, TV standby and a full device reboot. The automated
 isolated tests cover process restart, launcher re-entry, background and injected
 screen events; they do not turn off or reboot the user's television.
+
+0.17.3: test checkbox checked/unchecked, requiring a current PIN before changing;
+wrong PIN must leave the choice unchanged. Verify MainActivity always keeps its
+PIN gate while Autofill off bypasses only the Autofill gate and retains selection.
+Check option persistence after restart. Type ONE character and wait without any
+other key, focus change or navigation: it must become * after 1500 ms. Compare
+real rendered pixels, not just TransformationMethod.toString(). Test explicit
+paste actions remain masked, including a one-character clipboard paste.

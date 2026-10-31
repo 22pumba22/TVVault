@@ -46,6 +46,20 @@ public final class PinStore {
         catch (RuntimeException failure) { return true; }
     }
     public boolean isLegacy() { return isEnabled() && !prefs.contains("format"); }
+    public boolean isAutofillPinRequired() {
+        try { return prefs.getBoolean("require_autofill_pin", true); }
+        catch (RuntimeException failure) { return true; }
+    }
+    /** Lowering Autofill protection always needs a fresh successful current-PIN check. */
+    public boolean setAutofillPinRequired(boolean required, String currentPin) throws Exception {
+        synchronized (PinStore.class) {
+            if (!isEnabled()) throw new IllegalStateException("Configure a PIN first");
+            if (!verify(currentPin)) return false;
+            if (!prefs.edit().putBoolean("require_autofill_pin", required).commit())
+                throw new IllegalStateException("Cannot save Autofill PIN choice");
+            return true;
+        }
+    }
     public static boolean valid(String pin) { return pin != null && pin.matches("[0-9]{4,12}"); }
     private static byte[] legacy(String pin, byte[] salt) throws Exception {
         PBEKeySpec spec = new PBEKeySpec(pin.toCharArray(), salt, LEGACY_ITERATIONS, 256);

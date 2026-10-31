@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.17.3 (versionCode 21) — 2026-10-31
+- Independent Require PIN for autofill option, checked by default.
+- Fresh current-PIN authorization before changing Autofill protection.
+- Preserve app-entry PIN, picker and cross-app warnings when Autofill PIN is off.
+- Automatic 1500 ms asterisk masking with hardware text-layout invalidation.
+- PixelCopy tests inspect actual rendered preview-window pixels, not only strings.
+
 ## 0.17.2 (versionCode 20) — 2026-10-31
 - Relock on pause, new launcher intents and screen-off; screen-on returns to PIN gate.
 - PIN enabled/unset state clearly visible on Home; confirmation after enabling PIN.

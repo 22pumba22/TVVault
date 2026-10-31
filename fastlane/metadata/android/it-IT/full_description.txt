@@ -4,7 +4,7 @@ Funzioni:
 • Archivio locale cifrato con AES-256-GCM e Android Keystore.
 • Integrazione Android Autofill per le app compatibili.
 • Credenziali associate a un’app o universali ed esclusione delle app.
-• PIN numerico facoltativo per app e Autofill, inizialmente disattivato.
+• PIN numerico facoltativo per l’app, con richiesta PIN per Autofill configurabile separatamente.
 • Interfaccia italiana e inglese, navigabile con telecomando e D-pad.
 • Nessun permesso Internet, account, tracciamento o sincronizzazione cloud.
 

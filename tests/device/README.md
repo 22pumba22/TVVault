@@ -27,3 +27,14 @@ fresh process startup while the disclaimer remains hidden.
 Screen-off/on tests directly invoke the activity's registered receiver with
 synthetic screen intents. They cover a live activity without onStop; the TV
 itself is not power-cycled. Full physical standby/reboot remains a manual test.
+
+0.17.3 focused probe: UiProbe173 plus ProbeHostActivity, included ONLY in a
+separate .preview build. Add the matching instrumentation target and a non-exported
+ProbeHostActivity there. Normal phase tests the protected default, wrong/current
+PIN authorization, both Autofill modes, selection and a real Dataset return to
+the synthetic host. The cold phase verifies the saved choice after force-stop.
+The synthetic host excludes descendants from real system Autofill requests.
+PixelCopy captures only the owning synthetic preview window and compares an
+actual rendered digit before/after timeout with a fresh masked reference. The
+preview window's FLAG_SECURE is temporarily cleared for this capture and restored;
+production protection is unchanged. No real clipboard data is accessed by tests.

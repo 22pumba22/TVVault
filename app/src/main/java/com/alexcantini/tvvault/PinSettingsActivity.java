@@ -15,9 +15,10 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 public final class PinSettingsActivity extends LockedActivity {
-    private enum Mode { OVERVIEW, CHECK_CHANGE, CHECK_DISABLE, NEW_PIN }
+    private enum Mode { OVERVIEW, CHECK_CHANGE, CHECK_DISABLE, CHECK_AUTOFILL, NEW_PIN }
     private Mode mode = Mode.OVERVIEW;
     private boolean busy;
+    private boolean requestedAutofillPin;
     private int generation;
     private static final int BG = Color.rgb(8,15,24);
     @Override protected void onUnlocked() { mode = Mode.OVERVIEW; generation++; busy = false; render(); }
@@ -37,9 +38,23 @@ public final class PinSettingsActivity extends LockedActivity {
         root.addView(label(getString(R.string.security_settings),26));
         root.addView(label(getString(enabled ? R.string.pin_on : R.string.pin_off),18));
         root.addView(label(getString(R.string.pin_description),16));
+        if (enabled && mode == Mode.OVERVIEW) {
+            android.widget.CheckBox autofillPin = new android.widget.CheckBox(this);
+            autofillPin.setText(R.string.require_autofill_pin); TvTheme.styleCheckbox(autofillPin);
+            autofillPin.setChecked(pin.isAutofillPinRequired());
+            autofillPin.setOnClickListener(v -> {
+                if (busy || !isVaultUnlocked()) { autofillPin.setChecked(pin.isAutofillPinRequired()); return; }
+                requestedAutofillPin = autofillPin.isChecked();
+                autofillPin.setChecked(pin.isAutofillPinRequired());
+                mode = Mode.CHECK_AUTOFILL; render();
+            });
+            root.addView(autofillPin);
+        }
         message = label("",16);
         View first;
-        if (mode == Mode.CHECK_CHANGE || mode == Mode.CHECK_DISABLE) {
+        if (mode == Mode.CHECK_CHANGE || mode == Mode.CHECK_DISABLE || mode == Mode.CHECK_AUTOFILL) {
+            if (mode == Mode.CHECK_AUTOFILL)
+                root.addView(label(getString(requestedAutofillPin ? R.string.enable_autofill_pin_info : R.string.disable_autofill_pin_info),18));
             root.addView(label(getString(R.string.current_pin_prompt),18));
             EditText current = field(R.string.current_pin);
             root.addView(current);
@@ -97,9 +112,10 @@ public final class PinSettingsActivity extends LockedActivity {
         message.setText(pin.isLegacy() ? R.string.upgrading_pin : R.string.checking_pin);
         int request = generation;
         Mode requestedMode = mode;
+        boolean desiredAutofillPin = requestedAutofillPin;
         new Thread(() -> {
             boolean accepted = false, fault = false;
-            try { accepted = pin.verify(value); } catch (Exception error) { fault = true; }
+            try { accepted = requestedMode == Mode.CHECK_AUTOFILL ? pin.setAutofillPinRequired(desiredAutofillPin,value) : pin.verify(value); } catch (Exception error) { fault = true; }
             final boolean ok = accepted, failed = fault;
             runOnUiThread(() -> {
                 if (!isVaultUnlocked() || isFinishing() || isDestroyed() || request != generation) return;
@@ -110,6 +126,8 @@ public final class PinSettingsActivity extends LockedActivity {
                     message.setText(wait > 0 ? getString(R.string.pin_wait, wait) : getString(R.string.pin_wrong));
                 } else if (requestedMode == Mode.CHECK_DISABLE) {
                     mutate(pin::disable);
+                } else if (requestedMode == Mode.CHECK_AUTOFILL) {
+                    mode=Mode.OVERVIEW;render();
                 } else { mode = Mode.NEW_PIN; render(); }
             });
         }, "TVVault-check-current-PIN").start();

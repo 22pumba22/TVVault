@@ -178,7 +178,7 @@ public class UiProbe extends Instrumentation {
             require(fields().size()==2,"PIN-off settings show new/confirm fields");
             ui(()->{EditText f=fields().get(0);f.requestFocus();f.getText().append("1");
                 require(f.getTransformationMethod().getTransformation(f.getText(),f).toString().equals("1"),"Newly typed character briefly visible");});
-            SystemClock.sleep(800);
+            SystemClock.sleep(1700);
             ui(()->{EditText f=fields().get(0);require(f.getTransformationMethod().getTransformation(f.getText(),f).toString().equals("*"),"Character becomes an asterisk");});
             enter(0,"1234");enter(1,"1234");click(R.string.enable_pin);waitForText(R.string.change_pin);
             require(fields().isEmpty(),"Active PIN hides new/confirm fields");shot("pin-active");

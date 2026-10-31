@@ -21,6 +21,10 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 public class AutofillAuthActivity extends LockedActivity {
+    @Override protected boolean requiresPin() {
+        PinStore pin = new PinStore(this);
+        return pin.isEnabled() && pin.isAutofillPinRequired();
+    }
 
     public static final String EXTRA_PACKAGE = "package";
     public static final String EXTRA_IDS = "ids";

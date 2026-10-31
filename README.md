@@ -1,4 +1,4 @@
-# TV Vault 0.17.2
+# TV Vault 0.17.3
 
 Offline password manager for Android TV, created by Alex Cantini.
 Android 9 (API 28) or later. English UI by default, Italian on Italian systems.
@@ -13,6 +13,8 @@ fields can be filled. No Google Password Manager access or cloud account.
 - Choose the Android Autofill service from the home screen.
 - Exclude apps from Autofill suggestions.
 - Optional numeric PIN: 4–12 digits, disabled by default.
+- Separate Require PIN for autofill checkbox, protected by current-PIN authorization.
+  It defaults to checked; unchecking leaves app-entry protection enabled.
 - Settings to enable/change/disable the PIN and read security information.
 
 ## Security and data loss
@@ -75,3 +77,6 @@ GPL-3.0-only; see LICENSE, NOTICE and SOURCES.md. The supplied original project
 records a derivation from GPL Bitwarden Autofill code. Its exact referenced tag
 and license were verified. Original artwork is retained and fitted to 16:9 TV banners;
 redistribution rights must be confirmed by the publisher before submission.
+
+Secret entry reveals the latest typed character for 1500 ms then masks it automatically.
+A layout span refresh invalidates cached hardware glyphs; stored and pasted values stay masked.

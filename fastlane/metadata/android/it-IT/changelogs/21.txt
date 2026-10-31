@@ -1,0 +1,1 @@
+Opzione PIN separata per Autofill, protetta dal PIN attuale; mascheramento automatico dopo 1,5 secondi anche senza digitare altri caratteri.

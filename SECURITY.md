@@ -12,7 +12,7 @@ TV Vault is an offline local credential manager, not an audited security product
 - Changing/disabling an enabled PIN requires a fresh current-PIN check.
   New-PIN entry is revealed only after successful verification; backgrounding
   invalidates the in-progress settings authorization.
-- Secret inputs reveal only a newly typed single character for 650 ms, then show
+- Secret inputs reveal only a newly typed single character for 1500 ms, then show
   asterisks; stored values and multi-character pasted text remain masked.
 - PIN verifier/cooldown: private app preferences, not a cloud service.
 - PIN failures: persisted delays from the fifth failure; max 300 seconds.
@@ -48,3 +48,13 @@ FLAG_SECURE intentionally prevents ordinary software screen captures.
 Before public distribution, configure a public issue tracker and a private
 security contact in this document/store metadata. Do not post credentials,
 PINs, vault files or signing keys in public issues.
+
+## Autofill choice (0.17.3)
+An enabled vault PIN protects application entry. The separate Autofill PIN
+requirement defaults to true. Changing it requires fresh verification of the
+current PIN; wrong PINs retain the setting and count toward the retry delay.
+When unchecked, the Autofill selection activity may decrypt and return chosen
+credentials without asking for the PIN. It does not grant access to MainActivity
+or PIN settings. Package-selection warnings and credential selection remain.
+Changing the vault PIN preserves this option; a new PIN enrollment after disabling
+protection defaults to requiring the Autofill PIN again.

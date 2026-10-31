@@ -4,7 +4,7 @@ Features:
 • Encrypted local vault using AES-256-GCM and Android Keystore.
 • Android Autofill integration for compatible apps.
 • App-specific or universal credentials, and app exclusions.
-• Optional numeric PIN for app access and Autofill; disabled by default.
+• Optional numeric PIN for app access, with a separate PIN requirement for Autofill.
 • English and Italian interface with TV remote/D-pad navigation.
 • No Internet permission, accounts, tracking or cloud sync.
 

@@ -31,7 +31,7 @@ public abstract class LockedActivity extends Activity {
     private boolean receiverRegistered;
     private final BroadcastReceiver screenReceiver = new BroadcastReceiver() {
         @Override public void onReceive(Context context,Intent intent) {
-            if (!new PinStore(LockedActivity.this).isEnabled()) return;
+            if (!requiresPin()) return;
             if (Intent.ACTION_SCREEN_OFF.equals(intent.getAction())) invalidateAccess();
             else if (foreground && !disclosurePending && !unlocked && !gateVisible) showGate();
         }
@@ -52,6 +52,7 @@ public abstract class LockedActivity extends Activity {
         receiverRegistered=true;
     }
 
+    protected boolean requiresPin() { return new PinStore(this).isEnabled(); }
     protected abstract void onUnlocked();
     protected void onVaultLocked() { }
     protected final boolean isVaultUnlocked() { return unlocked && foreground && !disclosurePending; }
@@ -78,7 +79,7 @@ public abstract class LockedActivity extends Activity {
 
     private void continueEntry() {
         disclosurePending = false;
-        boolean enabled = new PinStore(this).isEnabled();
+        boolean enabled = requiresPin();
         if (enabled && !pinAtUnlock) { unlocked = false; onVaultLocked(); }
         if (!unlocked) {
             if (enabled) showGate();
@@ -89,7 +90,7 @@ public abstract class LockedActivity extends Activity {
     private void grantAccess() {
         unlocked = true;
         gateVisible = false;
-        pinAtUnlock = new PinStore(this).isEnabled();
+        pinAtUnlock = requiresPin();
         onUnlocked();
     }
 
@@ -111,16 +112,16 @@ public abstract class LockedActivity extends Activity {
     @Override protected void onPause() {
         // Do not discard an idle PIN input when a TV keyboard briefly takes focus.
         // A pending verification must never unlock an activity after it has paused.
-        if(new PinStore(this).isEnabled() && (unlocked || checking)) invalidateAccess();
+        if(requiresPin() && (unlocked || checking)) invalidateAccess();
         super.onPause();
     }
     @Override protected void onResume() {
         super.onResume();
-        if(foreground && !disclosurePending && !unlocked && !gateVisible && new PinStore(this).isEnabled())showGate();
+        if(foreground && !disclosurePending && !unlocked && !gateVisible && requiresPin())showGate();
     }
     @Override protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        if(new PinStore(this).isEnabled()) {
+        if(requiresPin()) {
             invalidateAccess();
             if(foreground && !disclosurePending)showGate();
         }
@@ -130,7 +131,7 @@ public abstract class LockedActivity extends Activity {
         foreground=false;
         foregroundActivities=Math.max(0,foregroundActivities-1);
         if(foregroundActivities==0)disclosureAccepted=false;
-        if(new PinStore(this).isEnabled())invalidateAccess();
+        if(requiresPin())invalidateAccess();
         else {
             generation++;checking=false;
             for(AlertDialog dialog:new java.util.ArrayList<>(dialogs))dialog.dismiss();

@@ -71,7 +71,7 @@
     <string name="pin_mismatch">The PINs do not match.</string>
     <string name="saving">Saving…</string>
     <string name="security_info">Security information</string>
-    <string name="security_details">Credentials are stored only on this device, encrypted using AES-256-GCM with a key in Android Keystore. TV Vault has no Internet permission or cloud sync. The optional PIN controls access to the app and autofill; it does not derive the encryption key. Without a PIN, anyone who can use the app can access the vault. A rooted or compromised device may expose credentials. Autofill requires compatible apps and Android support. There is no export or recovery feature: clearing app data, uninstalling, or losing the key may permanently lose the vault. TV Vault has not undergone an independent security audit.</string>
+    <string name="security_details">Credentials are stored only on this device, encrypted using AES-256-GCM with a key in Android Keystore. TV Vault has no Internet permission or cloud sync. The optional PIN protects app access; requiring it for autofill is configurable. It does not derive the encryption key. Without a PIN, anyone who can use the app can access the vault. A rooted or compromised device may expose credentials. Autofill requires compatible apps and Android support. There is no export or recovery feature: clearing app data, uninstalling, or losing the key may permanently lose the vault. TV Vault has not undergone an independent security audit.</string>
     <string name="vault_error_title">Vault unavailable</string>
     <string name="vault_error">The vault could not be read or decrypted. Saving is blocked to protect existing data. Do not clear app data or uninstall. Retry, or seek help while preserving the installation.</string>
     <string name="save_error">The vault could not be saved. The change has not been accepted. Existing data will not be replaced if reading or encryption fails.</string>
@@ -93,4 +93,7 @@
     <string name="home_pin_active">PIN active · Access protected</string>
     <string name="home_pin_unset">PIN not set · Recommended</string>
     <string name="pin_enabled_notice">PIN enabled. It will be requested when opening or returning to the app.</string>
+    <string name="require_autofill_pin">Require PIN for autofill</string>
+    <string name="enable_autofill_pin_info">Autofill will require your PIN. Opening the vault remains protected.</string>
+    <string name="disable_autofill_pin_info">Autofill will be allowed to use saved credentials without a PIN. Opening the vault will still require it.</string>
 </resources>

@@ -71,7 +71,7 @@
     <string name="pin_mismatch">I PIN non coincidono.</string>
     <string name="saving">Salvataggio…</string>
     <string name="security_info">Informazioni sulla sicurezza</string>
-    <string name="security_details">Le credenziali restano su questo dispositivo, cifrate con AES-256-GCM e una chiave in Android Keystore. TV Vault non ha il permesso Internet né sincronizzazione cloud. Il PIN facoltativo controlla l’accesso all’app e Autofill; non genera la chiave di cifratura. Senza PIN, chi può usare l’app può accedere al vault. Un dispositivo con root o compromesso può esporre le credenziali. Autofill richiede app compatibili e il supporto di Android. Non esistono esportazione o recupero: cancellare i dati, disinstallare o perdere la chiave può causare la perdita definitiva del vault. TV Vault non è stato sottoposto a un audit di sicurezza indipendente.</string>
+    <string name="security_details">Le credenziali restano su questo dispositivo, cifrate con AES-256-GCM e una chiave in Android Keystore. TV Vault non ha il permesso Internet né sincronizzazione cloud. Il PIN facoltativo protegge l’accesso all’app; la richiesta per Autofill è configurabile. Il PIN non genera la chiave di cifratura. Senza PIN, chi può usare l’app può accedere al vault. Un dispositivo con root o compromesso può esporre le credenziali. Autofill richiede app compatibili e il supporto di Android. Non esistono esportazione o recupero: cancellare i dati, disinstallare o perdere la chiave può causare la perdita definitiva del vault. TV Vault non è stato sottoposto a un audit di sicurezza indipendente.</string>
     <string name="vault_error_title">Vault non disponibile</string>
     <string name="vault_error">Impossibile leggere o decifrare il vault. Il salvataggio è bloccato per proteggere i dati esistenti. Non cancellare i dati e non disinstallare. Riprova o chiedi assistenza conservando l’installazione.</string>
     <string name="save_error">Impossibile salvare il vault. La modifica non è stata accettata. In caso di errore di lettura o cifratura, i dati esistenti non vengono sostituiti.</string>
@@ -93,4 +93,7 @@
     <string name="home_pin_active">PIN attivo · Accesso protetto</string>
     <string name="home_pin_unset">PIN non impostato · Consigliato</string>
     <string name="pin_enabled_notice">PIN attivato. Verrà richiesto all’apertura e al ritorno nell’app.</string>
+    <string name="require_autofill_pin">Richiedi il PIN per la compilazione automatica</string>
+    <string name="enable_autofill_pin_info">Autofill richiederà il PIN. L’apertura del vault resta protetta.</string>
+    <string name="disable_autofill_pin_info">Autofill potrà usare le credenziali salvate senza PIN. Il PIN resterà richiesto per aprire il vault.</string>
 </resources>

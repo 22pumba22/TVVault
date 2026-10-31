@@ -1,0 +1,1 @@
+Independent Autofill PIN option authorized with the current PIN; automatic 1.5-second asterisk masking even without another key press.
